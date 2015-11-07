@@ -4,7 +4,7 @@ SQLKing
 SQLKing is an Android SQLite ORM geared towards working with flat data structures. Tables are defined by Model classes and CRUD classes expose clean builders for executing queries.
 
 ####Gradle dependency####
-```
+```groovy
 dependencies {
     compile 'com.beyondconstraint.sqlking:SQLKing:1.0'
 }
