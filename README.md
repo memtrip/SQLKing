@@ -3,6 +3,13 @@ SQLKing
 
 SQLKing is an Android SQLite ORM geared towards working with flat data structures. Tables are defined by Model classes and CRUD classes expose clean builders for executing queries.
 
+####Gradle dependency####
+```
+dependencies {
+    compile 'com.beyondconstraint.sqlking:SQLKing:1.0'
+}
+```
+
 ####Define your models###
 SQL tables are defined by POJOs that implement the Model interface. The getter and setter methods must match the member variables, i.e; private String name; must be accompanied by getName() / setName(String newVal) methods.
 
@@ -95,7 +102,7 @@ user.setUsername("12345678");
 user.setIsRegistered(true);
 user.setTimestamp(System.currentTimeMillis());
 
-// TODO: Select UNION should be used for inserts
+// INSERT INTO User (username, isRegistered, timestamp) VALUES ('12345678',true,632348968244);
 long[] value = Insert.getBuilder().values(user).execute(CustomApplication.getSQLProvider());
 ```
 
@@ -198,5 +205,6 @@ User[] users = Select.getBuilder()
 The `tests/java/com/beyondconstraint/sqlking` package contains a full set of unit and integration tests.
 
 ####TODO####
-- Upgrade the schema gracefully, instead of dropping and recreating
-- Use @annotation processing to auto generate query classes (remove the dependency on reflection)
+- Upgrade the schema gracefully, instead of dropping and recreating the database
+- Use @annotation processing to auto generate query classes during the build process. This will attempt deprecate the reflection heavy areas of the library
+- Add the Random() method to OrderBy
