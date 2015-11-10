@@ -1,4 +1,8 @@
-apply plugin: 'com.android.library'
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
 
 buildscript {
     repositories {
@@ -11,54 +15,12 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
-
-    defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        }
-    }
-
-    sourceSets {
-        main  {
-            java {
-                srcDir 'src/main/java'
-            }
-        }
-
-        androidTest.setRoot('src/tests')
-        androidTest.java.srcDirs = ['src/tests/java']
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    androidTestCompile(
-        'com.android.support.test:runner:0.3',
-        'com.android.support.test:rules:0.3',
-        'com.google.dexmaker:dexmaker-mockito:1.1',
-        'com.google.dexmaker:dexmaker:1.1'
-    )
-}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 ext {
     bintrayRepo = 'Maven'
@@ -74,7 +36,7 @@ ext {
     siteUrl = 'https://github.com/beyondconstraint/SQLKing'
     gitUrl = 'https://github.com/beyondconstraint/SQLKing.git'
 
-    libraryVersion = '1.0'
+    libraryVersion = '1.0.2'
 
     developerId = 'samkirton'
     developerName = 'Samuel Kirton'
@@ -85,5 +47,127 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-apply from: 'install.gradle'
-apply from: 'bintray.gradle'
+version = libraryVersion
+group = publishedGroupId
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 3
+        versionName "1.0.2"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main  {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+
+        androidTest.setRoot('src/tests')
+        androidTest.java.srcDirs = ['src/tests/java']
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        userOrg = bintrayOrg
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+            gpg {
+                sign = true
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
+                artifactId artifact
+
+                name libraryName
+                description libraryDescription
+                url siteUrl
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    androidTestCompile(
+        'com.android.support.test:runner:0.3',
+        'com.android.support.test:rules:0.3',
+        'com.google.dexmaker:dexmaker-mockito:1.1',
+        'com.google.dexmaker:dexmaker:1.1'
+    )
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
