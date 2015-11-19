@@ -1,12 +1,12 @@
 SQLKing
 ======================
 
-SQLKing is an Android SQLite ORM geared towards working with flat data structures. Tables are defined by Model classes and CRUD classes expose clean builders for executing queries.
-
+SQLKing is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.
 ####Gradle dependency####
 ```groovy
 dependencies {
-    compile 'com.beyondconstraint.sqlking:SQLKing:1.0.2'
+    apt 'com.memtrip.sqlking:sqlking-preprocessor:1.0'
+    compile 'com.memtrip.sqlking:sqlking-client:1.0'
 }
 ```
 
@@ -14,11 +14,12 @@ dependencies {
 SQL tables are defined by POJOs that implement the Model interface. The getter and setter methods must match the member variables, i.e; private String name; must be accompanied by getName() / setName(String newVal) methods.
 
 ```java
+@Table
 public class User implements Model {
-    private String username;
-    private long timestamp;
-    private boolean isRegistered;
-    private byte[] profilePicture;
+    @Member private String username;
+    @Member private long timestamp;
+    @Member private boolean isRegistered;
+    @Member private byte[] profilePicture;
 
     public String getUsername() {
         return username;
@@ -76,18 +77,22 @@ public class CustomApplication extends Application {
         super.onCreate();
         sInstance = this;
 
-		Model[] model = new Model[] {
-            	new User()
+        Model[] models = new Model[] {
+                new Post(),
+                new User()
         };
 
-        SQLInit SQLInit = new SQLInit(
-	            DATABASE_NAME,
-	            DATABASE_VERSION,
-	            model,
-	            mContext
+        Resolver resolver = new Q.DefaultResolver();
+
+        SQLDatabase database = SQLInit.createDatabase(
+                DATABASE_NAME,
+                DATABASE_VERSION,
+                models,
+                resolver,
+                mContext
         );
 
-        mSQLProvider = new SQLProvider(new DefaultDatabaseEngine(SQLInit.getDatabase()));
+        mSQLProvider = new SQLProvider(database, resolver);
     }
 }
 ```
@@ -205,6 +210,6 @@ User[] users = Select.getBuilder()
 The `tests/java/com/beyondconstraint/sqlking` package contains a full set of unit and integration tests.
 
 ####TODO####
-- Upgrade the schema gracefully, instead of dropping and recreating the database
-- Use @annotation processing to auto generate query classes during the build process. This will attempt deprecate the reflection heavy areas of the library
 - Add the Random() method to OrderBy
+- Add index to the CREATE TABLE methods
+- Implement the foreign_key functionality 

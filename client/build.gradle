@@ -1,0 +1,145 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.neenbedankt.android-apt'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+ext {
+    bintrayRepo = 'Maven'
+    bintrayName = 'sqlking'
+    bintrayOrg = 'memtrip'
+
+    publishedGroupId = 'com.memtrip.sqlking'
+    libraryName = 'sqlking'
+    artifact = 'sqlking-client'
+
+    libraryDescription = 'SQLKing is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
+
+    siteUrl = 'https://github.com/memtrip/SQLKing'
+    gitUrl = 'https://github.com/memtrip/SQLKing.git'
+
+    libraryVersion = '1.0'
+
+    developerId = 'samkirton'
+    developerName = 'Samuel Kirton'
+    developerEmail = 'sam@memtrip.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+version = libraryVersion
+group = publishedGroupId
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+    sourceSets {
+        main  {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+
+        androidTest.setRoot('src/tests')
+        androidTest.java.srcDirs = ['src/tests/java']
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        userOrg = bintrayOrg
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+            gpg {
+                sign = true
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'jar'
+                groupId publishedGroupId
+                artifactId artifact
+
+                name libraryName
+                description libraryDescription
+            }
+        }
+    }
+}
+
+dependencies {
+    compile 'com.memtrip.sqlking:sqlking-common:1.0'
+
+    androidTestApt 'com.memtrip.sqlking:sqlking-preprocessor:1.0'
+
+    androidTestCompile(
+        'com.android.support.test:runner:0.3',
+        'com.android.support.test:rules:0.3',
+        'com.google.dexmaker:dexmaker-mockito:1.1',
+        'com.google.dexmaker:dexmaker:1.1'
+    )
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
