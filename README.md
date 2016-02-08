@@ -124,7 +124,7 @@ Update.getBuilder()
 
 ```java
 // DELETE FROM User;
-User[] users = Select.getBuilder().execute(User.class, CustomApplication.getSQLProvider());
+User[] users = Delete.getBuilder().execute(User.class, CustomApplication.getSQLProvider());
 ```
 
 ```java
