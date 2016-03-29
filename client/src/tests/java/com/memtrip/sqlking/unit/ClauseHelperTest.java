@@ -26,10 +26,14 @@ import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 import com.memtrip.sqlking.unit.mock.ClauseHelperStub;
 
+import static com.memtrip.sqlking.operation.clause.And.and;
+import static com.memtrip.sqlking.operation.clause.In.in;
+import static com.memtrip.sqlking.operation.clause.Or.or;
+import static com.memtrip.sqlking.operation.clause.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class ClauseHelperTest {
 
@@ -37,7 +41,7 @@ public class ClauseHelperTest {
     public void testWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam");
+        Where where = where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam");
 
         String clause = clauseHelper.getClause(new Clause[]{where});
         String[] args = clauseHelper.getClauseArgs(new Clause[]{where});
@@ -51,7 +55,7 @@ public class ClauseHelperTest {
     public void testInQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        In in = new In(Q.UserSQLQuery.USERNAME, "sam", "josh");
+        In in = in(Q.UserSQLQuery.USERNAME, "sam", "josh");
 
         String clause = clauseHelper.getClause(new Clause[]{in});
         String[] args = clauseHelper.getClauseArgs(new Clause[]{in});
@@ -66,9 +70,9 @@ public class ClauseHelperTest {
     public void testAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        And and = new And(
-                new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, 10),
-                new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, 20)
+        And and = and(
+                where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, 10),
+                where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, 20)
         );
 
         String clause = clauseHelper.getClause(new Clause[]{and});
@@ -84,13 +88,13 @@ public class ClauseHelperTest {
     public void tesOrAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        And and = new And(
-                new Or(
-                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam"),
-                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "angie")
+        And and = and(
+                or(
+                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam"),
+                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "angie")
                 ),
-                new And(
-                        new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, 1234567890)
+                and(
+                        where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, 1234567890)
                 )
         );
 
@@ -108,9 +112,9 @@ public class ClauseHelperTest {
     public void testOrWhereInQueryIsBuiltFromClause() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Or or = new Or(
-            new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam"),
-            new In(Q.UserSQLQuery.TIMESTAMP, 10, 20)
+        Or or = or(
+            where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, "sam"),
+            in(Q.UserSQLQuery.TIMESTAMP, 10, 20)
         );
 
         String clause = clauseHelper.getClause(new Clause[]{or});

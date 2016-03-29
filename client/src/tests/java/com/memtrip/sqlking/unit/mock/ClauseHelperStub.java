@@ -18,6 +18,6 @@ package com.memtrip.sqlking.unit.mock;
 import com.memtrip.sqlking.database.ClauseHelper;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class ClauseHelperStub extends ClauseHelper { }

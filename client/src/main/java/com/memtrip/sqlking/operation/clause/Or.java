@@ -16,7 +16,7 @@
 package com.memtrip.sqlking.operation.clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Or implements Clause {
     private Clause[] mClause;
@@ -25,7 +25,16 @@ public class Or implements Clause {
         return mClause;
     }
 
-    public Or(Clause... clause) {
+    private Or(Clause... clause) {
         mClause = clause;
+    }
+
+    /**
+     * Specifies a SQLite OR operator
+     * @param clause  Combine multiple conditions
+     * @return Or operator
+     */
+    public static Or or(Clause... clause) {
+        return new Or(clause);
     }
 }

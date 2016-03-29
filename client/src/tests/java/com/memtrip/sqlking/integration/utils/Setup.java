@@ -17,16 +17,14 @@ package com.memtrip.sqlking.integration.utils;
 
 import android.content.Context;
 
-import com.memtrip.sqlking.common.Resolver;
-import com.memtrip.sqlking.database.SQLDatabase;
-import com.memtrip.sqlking.database.SQLInit;
 import com.memtrip.sqlking.database.SQLProvider;
+import com.memtrip.sqlking.database.SQLInit;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.integration.models.Post;
 import com.memtrip.sqlking.integration.models.User;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Setup {
     private Context mContext;
@@ -35,7 +33,7 @@ public class Setup {
     public static final String DATABASE_NAME = "SQLKingTest";
     private static final int DATABASE_VERSION = 1;
 
-    public SQLProvider getSQLProvider() {
+    public SQLProvider getSQLDatabase() {
         return mSQLProvider;
     }
 
@@ -44,18 +42,13 @@ public class Setup {
     }
 
     public void setUp() {
-
-        Resolver resolver = new Q.DefaultResolver();
-
-        SQLDatabase database = SQLInit.createDatabase(
+        mSQLProvider = SQLInit.createDatabase(
                 DATABASE_NAME,
                 DATABASE_VERSION,
-                resolver,
+                new Q.DefaultResolver(),
                 mContext,
                 User.class,
                 Post.class
         );
-
-        mSQLProvider = new SQLProvider(database, resolver);
     }
 }

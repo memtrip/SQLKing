@@ -26,16 +26,18 @@ import com.memtrip.sqlking.operation.function.Update;
 
 import org.junit.Before;
 
+import static com.memtrip.sqlking.operation.clause.Where.where;
+
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class UpdateTest extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
+        getSetupUser().setupFourTestUsers(getSQLDatabase());
     }
 
     @org.junit.Test
@@ -50,13 +52,13 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         Update.getBuilder()
                 .values(contentValues)
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .execute(User.class, getSQLDatabase());
 
         // verify
         User user = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .executeSingle(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(true, user.getIsRegistered());
         assertEquals(timestamp, user.getTimestamp());
@@ -76,11 +78,11 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         Update.getBuilder()
                 .values(contentValues)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // verify
         User[] users = Select.getBuilder()
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         for (User user : users) {
             assertEquals(timestamp, user.getTimestamp());
@@ -103,13 +105,13 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         Update.getBuilder()
                 .values(contentValues)
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // verify
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
+                .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected

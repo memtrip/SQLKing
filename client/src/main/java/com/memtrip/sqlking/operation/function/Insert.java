@@ -15,20 +15,21 @@
  */
 package com.memtrip.sqlking.operation.function;
 
-import com.memtrip.sqlking.Model;
+import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * Executes an Insert query against the SQLite database
+ * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Insert {
-    private Model[] mModels;
+public class Insert extends Query {
+    private Object[] mModels;
 
-    public Model[] getModels() {
+    public Object[] getModels() {
         return mModels;
     }
 
-    private Insert(Model... models) {
+    private Insert(Object... models) {
         mModels = models;
     }
 
@@ -37,19 +38,30 @@ public class Insert {
     }
 
     public static class Builder {
-        private Model[] mModels;
+        private Object[] mValues;
 
         private Builder() { }
 
-        public Builder values(Model... models) {
-            mModels= models;
+        /**
+         * Specify the values for the Insert query
+         * @param values The values that are being inserted
+         * @return Call Builder#execute to run the query
+         */
+        public Builder values(Object... values) {
+            mValues = values;
             return this;
         }
 
-        public void execute(Class<? extends Model> classDef, SQLProvider sqlProvider) {
-            sqlProvider.insert(
-                    new Insert(mModels),
-                    sqlProvider.getResolver().getSQLQuery(classDef)
+        /**
+         * Executes an Insert query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         */
+        public void execute(Class<? extends Object> classDef, SQLProvider sqlProvider) {
+            insert(
+                    new Insert(mValues),
+                    classDef,
+                    sqlProvider
             );
         }
     }

@@ -24,31 +24,63 @@ import com.memtrip.sqlking.operation.function.Insert;
  * The test data is a hard dependency of all the integration tests, changing
  * these constants will cause failures in the ReadTest suite. It is advised that
  * new constants are added if further test suites are required
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class SetupUser {
     public static final String ANGIE_USER_NAME = "angie";
     public static final long ANGIE_TIMESTAMP = 123456789;
     public static final boolean ANGIE_IS_REGISTERED = true;
+    public static final double ANGIE_RATING = 100.2342;
+    public static final int ANGIE_COUNT = 12;
 
     public static final String JOSH_USER_NAME = "josh";
     public static final long JOSH_TIMESTAMP = 23456789;
     public static final boolean JOSH_IS_REGISTERED = true;
+    public static final double JOSH_RATING = 10.2342;
+    public static final int JOSH_COUNT = 192;
 
     public static final String GILL_USER_NAME = "gill";
     public static final long GILL_TIMESTAMP = 3456789;
     public static final boolean GILL_IS_REGISTERED = false;
+    public static final double GILL_RATING = 3.22;
+    public static final int GILL_COUNT = 7;
 
     public static final String CLYDE_USER_NAME = "clyde";
     public static final long CLYDE_TIMESTAMP = 456789;
     public static final boolean CLYDE_IS_REGISTERED = false;
+    public static final double CLYDE_RATING = 90.2;
+    public static final int CLYDE_COUNT = 62;
 
     public void setupFourTestUsers(SQLProvider sqlProvider) {
         User[] users = {
-            createUser(CLYDE_USER_NAME,CLYDE_TIMESTAMP,CLYDE_IS_REGISTERED),
-            createUser(ANGIE_USER_NAME,ANGIE_TIMESTAMP,ANGIE_IS_REGISTERED),
-            createUser(GILL_USER_NAME,GILL_TIMESTAMP,GILL_IS_REGISTERED),
-            createUser(JOSH_USER_NAME,JOSH_TIMESTAMP,JOSH_IS_REGISTERED),
+            createUser(
+                    ANGIE_USER_NAME,
+                    ANGIE_TIMESTAMP,
+                    ANGIE_IS_REGISTERED,
+                    ANGIE_RATING,
+                    ANGIE_COUNT
+            ),
+            createUser(
+                    JOSH_USER_NAME,
+                    JOSH_TIMESTAMP,
+                    JOSH_IS_REGISTERED,
+                    JOSH_RATING,
+                    JOSH_COUNT
+            ),
+            createUser(
+                    GILL_USER_NAME,
+                    GILL_TIMESTAMP,
+                    GILL_IS_REGISTERED,
+                    GILL_RATING,
+                    GILL_COUNT
+            ),
+            createUser(
+                    CLYDE_USER_NAME,
+                    CLYDE_TIMESTAMP,
+                    CLYDE_IS_REGISTERED,
+                    CLYDE_RATING,
+                    CLYDE_COUNT
+            ),
         };
 
         Insert.getBuilder()
@@ -60,11 +92,19 @@ public class SetupUser {
         Delete.getBuilder().execute(User.class, sqlProvider);
     }
 
-    public static User createUser(String userId, long timestamp, boolean isRegistered) {
+    public static User createUser(String userId,
+                                  long timestamp,
+                                  boolean isRegistered,
+                                  double rating,
+                                  int count) {
+
         User user = new User();
         user.setUsername(userId);
         user.setTimestamp(timestamp);
         user.setIsRegistered(isRegistered);
+        user.setRating(rating);
+        user.setCount(count);
+
         return user;
     }
 }

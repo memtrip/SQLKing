@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+* @author Samuel Kirton [sam@memtrip.com]
 */
 public class ClauseHelper {
     private static final String SPACE = " ";
@@ -41,11 +41,6 @@ public class ClauseHelper {
 
     protected ClauseHelper() { }
 
-    /**
-     * Build the conditional clause
-     * @param clause
-     * @return
-     */
     public String getClause(Clause[] clause) {
         StringBuilder clauseBuilder = new StringBuilder();
 
@@ -58,11 +53,6 @@ public class ClauseHelper {
         return clauseBuilder.toString();
     }
 
-    /**
-     * Loop through the supported Clause implementations and build the clause accordingly
-     * @param clause
-     * @return
-     */
     private String getClause(Clause clause) {
         StringBuilder clauseBuilder = new StringBuilder();
 
@@ -101,11 +91,6 @@ public class ClauseHelper {
         return clauseBuilder.toString();
     }
 
-    /**
-     * Build the WHERE conditional string
-     * @param condition
-     * @return
-     */
     private String buildWhereCondition(Where condition) {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -118,11 +103,6 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    /**
-     * Build the IN condition string
-     * @param in
-     * @return
-     */
     private String buildInCondition(In in) {
         String row = in.getRow();
         int length = in.getValues().length;
@@ -150,11 +130,6 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    /**
-     * Build the clause arguments
-     * @param clause
-     * @return
-     */
     public String[] getClauseArgs(Clause[] clause) {
         List<String> args = new ArrayList<>();
 
@@ -167,11 +142,6 @@ public class ClauseHelper {
         return args.toArray(new String[args.size()]);
     }
 
-    /**
-     * Loop through the supported Clause implementations and build the args accordingly
-     * @param clause
-     * @return
-     */
     private List<String> getClauseArgs(Clause clause) {
         List<String> args = new ArrayList<>();
 
@@ -194,11 +164,6 @@ public class ClauseHelper {
         return args;
     }
 
-    /**
-     * Build the WHERE arguments
-     * @param where
-     * @return
-     */
     private String buildWhereArgs(Where where) {
         String value = String.valueOf(where.getValue());
 
@@ -211,11 +176,6 @@ public class ClauseHelper {
         return value;
     }
 
-    /**
-     * Build the IN arguments
-     * @param in
-     * @return
-     */
     private List<String> buildInArgs(In in) {
         List<String> args = new ArrayList<>();
 
@@ -226,11 +186,6 @@ public class ClauseHelper {
         return args;
     }
 
-    /**
-     * Build the order by keyword part of the SQL statement
-     * @param orderBy
-     * @return
-     */
     public String getOrderBy(OrderBy orderBy) {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -243,11 +198,6 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    /**
-     * Build the limit keyword part of the SQL statement
-     * @param limit
-     * @return
-     */
     public String getLimit(Limit limit) {
         StringBuilder stringBuilder = new StringBuilder();
 

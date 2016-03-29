@@ -15,86 +15,83 @@
  */
 package com.memtrip.sqlking.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.memtrip.sqlking.common.Resolver;
-import com.memtrip.sqlking.common.SQLQuery;
-import com.memtrip.sqlking.operation.function.Count;
-import com.memtrip.sqlking.operation.function.Delete;
-import com.memtrip.sqlking.operation.function.Insert;
-import com.memtrip.sqlking.operation.function.Select;
-import com.memtrip.sqlking.operation.function.Update;
+import com.memtrip.sqlking.operation.clause.Clause;
+import com.memtrip.sqlking.operation.keyword.Limit;
+import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class SQLProvider {
-    private SQLDatabase mDatabase;
+    private SQLiteDatabase mDatabase;
     private Resolver mResolver;
+    private ClauseHelper mClauseHelper;
 
-    public Resolver getResolver() {
+    protected Resolver getResolver() {
         return mResolver;
     }
 
-    public SQLProvider(SQLDatabase database, Resolver resolver) {
+    protected SQLProvider(SQLiteDatabase database, Resolver resolver) {
         mDatabase = database;
         mResolver = resolver;
+        mClauseHelper = new ClauseHelper();
     }
 
-    public void insert(Insert insert, SQLQuery sqlQuery) {
-        if (insert.getModels() != null && insert.getModels().length > 0) {
-            String[] unionInsert = sqlQuery.buildUnionInsertQuery(insert.getModels());
-            mDatabase.insertMultiple(unionInsert);
+    protected void insertMultiple(String[] unionInsertQuery) {
+        mDatabase.beginTransaction();
+
+        for (String query : unionInsertQuery) {
+            Cursor cursor = mDatabase.rawQuery(query, null);
+            cursor.moveToLast();
+            cursor.close();
         }
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
     }
 
-    public <T> T[] select(Select select, SQLQuery sqlQuery) {
-        Cursor cursor = mDatabase.query(
-                sqlQuery.getTableName(),
-                sqlQuery.getColumnNames(),
-                select.getClause(),
-                null,
-                null,
-                select.getOrderBy(),
-                select.getLimit()
-        );
-
-        return sqlQuery.retrieveSQLSelectResults(cursor);
-    }
-
-    public <T> T selectSingle(Select select, SQLQuery sqlQuery) {
-        T[] results = select(select, sqlQuery);
-
-        if (results != null && results.length > 0) {
-            return results[0];
-        } else {
-            return null;
-        }
-    }
-
-    public boolean update(Update update, SQLQuery sqlQuery) {
-        int result = mDatabase.update(
-                sqlQuery.getTableName(),
-                update.getContentValues(),
-                update.getConditions()
-        );
-
-        return result >= 1;
-    }
-
-    public long count(Count count, SQLQuery sqlQuery) {
-        return mDatabase.count(
-                sqlQuery.getTableName(),
-                count.getClause()
+    protected int update(String tableName, ContentValues values, Clause[] clause) {
+        return mDatabase.update(
+                tableName,
+                values,
+                mClauseHelper.getClause(clause),
+                mClauseHelper.getClauseArgs(clause)
         );
     }
 
-    public boolean delete(Delete delete, SQLQuery sqlQuery) {
-        int result = mDatabase.delete(
-                sqlQuery.getTableName(),
-                delete.getConditions()
+    protected Cursor query(String tableName, String[] columns, Clause[] clause, String groupBy, String having, OrderBy orderBy, Limit limit) {
+        return mDatabase.query(
+                tableName,
+                columns,
+                mClauseHelper.getClause(clause),
+                mClauseHelper.getClauseArgs(clause),
+                groupBy,
+                having,
+                mClauseHelper.getOrderBy(orderBy),
+                mClauseHelper.getLimit(limit)
         );
+    }
 
-        return result >= 1;
+    protected int delete(String tableName, Clause[] clause) {
+        return mDatabase.delete(
+                tableName,
+                mClauseHelper.getClause(clause),
+                mClauseHelper.getClauseArgs(clause)
+        );
+    }
+
+    protected long count(String tableName, Clause[] clause) {
+        return DatabaseUtils.queryNumEntries(
+                mDatabase,
+                tableName,
+                mClauseHelper.getClause(clause),
+                mClauseHelper.getClauseArgs(clause)
+        );
     }
 }

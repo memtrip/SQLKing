@@ -16,6 +16,7 @@
 package com.memtrip.sqlking.operation.clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * A Clause is used to provide an expressive api for querying the SQLite database.
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public interface Clause { }

@@ -7,8 +7,8 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 ext {
-    bintrayRepo = 'Maven'
-    bintrayName = 'sqlking'
+    bintrayRepo = 'memtrip '
+    bintrayName = 'com.memtrip.sqlking'
     bintrayOrg = 'memtrip'
 
     publishedGroupId = 'com.memtrip.sqlking'
@@ -29,6 +29,9 @@ ext {
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
+
+    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
+    gitUrl = 'https://github.com/memtrip/SQLKing.git'
 }
 
 version = libraryVersion
@@ -100,12 +103,31 @@ install {
     repositories.mavenInstaller {
         pom {
             project {
-                packaging 'jar'
+                packaging 'aar'
                 groupId publishedGroupId
                 artifactId artifact
 
                 name libraryName
                 description libraryDescription
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
             }
         }
     }

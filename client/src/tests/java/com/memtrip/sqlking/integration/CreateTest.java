@@ -19,22 +19,23 @@ import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.integration.models.User;
 import com.memtrip.sqlking.integration.utils.SetupUser;
 import com.memtrip.sqlking.operation.clause.Where;
-import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Select;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.memtrip.sqlking.operation.clause.Where.where;
+
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class CreateTest  extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
     }
 
     @Test
@@ -50,10 +51,10 @@ public class CreateTest  extends IntegrationTest {
         user.setTimestamp(USER_TIMESTAMP);
 
         // exercise
-        Insert.getBuilder().values(user).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(user).execute(User.class, getSQLDatabase());
 
         // verify
-        User responseUser = Select.getBuilder().execute(User.class, getSQLProvider())[0];
+        User responseUser = Select.getBuilder().execute(User.class, getSQLDatabase())[0];
 
         assertTrue(user.getUsername().equals(responseUser.getUsername()));
         assertTrue(user.getTimestamp() == responseUser.getTimestamp());
@@ -66,35 +67,56 @@ public class CreateTest  extends IntegrationTest {
         String ANGIE_USERNAME = "angie";
         long ANGIE_TIMESTAMP = System.currentTimeMillis();
         boolean ANGIE_IS_REGISTERED = true;
+        double ANGIE_RATING = 2.7;
+        int ANGIE_COUNT = 1028;
 
         String SAM_USERNAME = "sam";
         long SAM_TIMESTAMP = System.currentTimeMillis() + 1000;
         boolean SAM_IS_REGISTERED = false;
+        double SAM_RATING = 2.7;
+        int SAM_COUNT = 10024;
 
         User[] users = new User[] {
-                SetupUser.createUser(ANGIE_USERNAME, ANGIE_TIMESTAMP, ANGIE_IS_REGISTERED),
-                SetupUser.createUser(SAM_USERNAME, SAM_TIMESTAMP, SAM_IS_REGISTERED),
+                SetupUser.createUser(
+                        ANGIE_USERNAME,
+                        ANGIE_TIMESTAMP,
+                        ANGIE_IS_REGISTERED,
+                        ANGIE_RATING,
+                        ANGIE_COUNT
+                ),
+
+                SetupUser.createUser(
+                        SAM_USERNAME,
+                        SAM_TIMESTAMP,
+                        SAM_IS_REGISTERED,
+                        SAM_RATING,
+                        SAM_COUNT
+                ),
         };
 
         // exercise
-        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(users).execute(User.class, getSQLDatabase());
 
         // verify
         User angieUser = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
-                .executeSingle(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
+                .executeSingle(User.class, getSQLDatabase());
 
         User samUser = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
-                .executeSingle(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
+                .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());
         assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
         assertEquals(ANGIE_IS_REGISTERED, angieUser.getIsRegistered());
+        assertEquals(ANGIE_RATING, angieUser.getRating());
+        assertEquals(ANGIE_COUNT, angieUser.getCount());
 
         assertEquals(SAM_USERNAME, samUser.getUsername());
         assertEquals(SAM_TIMESTAMP, samUser.getTimestamp());
         assertEquals(SAM_IS_REGISTERED, samUser.getIsRegistered());
+        assertEquals(SAM_RATING, samUser.getRating());
+        assertEquals(SAM_COUNT, samUser.getCount());
     }
 
     @Test
@@ -103,19 +125,23 @@ public class CreateTest  extends IntegrationTest {
         String ANGIE_USERNAME = "angie";
         long ANGIE_TIMESTAMP = System.currentTimeMillis();
         boolean ANGIE_IS_REGISTERED = true;
+        double ANGIE_RATING = 1.0;
+        int ANGIE_COUNT = 300;
 
         User[] users = new User[COLUMN_COUNT];
         for (int i = 0; i < COLUMN_COUNT; i++) {
             users[i] = SetupUser.createUser(
                     ANGIE_USERNAME,
                     ANGIE_TIMESTAMP+i,
-                    ANGIE_IS_REGISTERED
+                    ANGIE_IS_REGISTERED,
+                    ANGIE_RATING,
+                    ANGIE_COUNT
             );
         }
 
-        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(users).execute(User.class, getSQLDatabase());
 
-        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLDatabase());
 
         for (int i = 0; i < usersInserted.length; i++) {
             assertEquals(ANGIE_TIMESTAMP+i,usersInserted[i].getTimestamp());

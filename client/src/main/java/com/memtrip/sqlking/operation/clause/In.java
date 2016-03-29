@@ -16,7 +16,7 @@
 package com.memtrip.sqlking.operation.clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class In <T> implements Clause {
     private String mRow;
@@ -30,8 +30,18 @@ public class In <T> implements Clause {
         return mValues;
     }
 
-    public In(String row, T... values) {
+    private In(String row, T... values) {
         mRow = row;
         mValues = values;
+    }
+
+    /**
+     * Specifies a SQLite IN operator
+     * @param row  The row to perform the operation on
+     * @param values The values of the in operator
+     * @return  In operator
+     */
+    public static In in(String row, Object... values) {
+        return new In(row, values);
     }
 }

@@ -15,15 +15,17 @@
  */
 package com.memtrip.sqlking.operation.function;
 
+import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * Executes a Select query against the SQLite database
+ * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Select <T> {
+public class Select extends Query {
     private Clause[] mClause;
     private OrderBy mOrderBy;
     private Limit mLimit;
@@ -57,29 +59,61 @@ public class Select <T> {
 
         private Builder() { }
 
-        public Builder where(Clause... conditions) {
-            mClause = conditions;
+        /**
+         * Specify a Where clause for the Select query
+         * @param clause Where clause
+         * @return Call Builder#execute to run the query
+         */
+        public Builder where(Clause... clause) {
+            mClause = clause;
             return this;
         }
 
-        public Builder orderBy(String field, OrderBy.Order order) {
-            mOrderBy = new OrderBy(field, order);
+        /**
+         * Specify an Order By clause for the Select query
+         * @param column The column to use with the Order By clause
+         * @param order The direction of the Order By clause
+         * @return Call Builder#execute to run the query
+         */
+        public Builder orderBy(String column, OrderBy.Order order) {
+            mOrderBy = new OrderBy(column, order);
             return this;
         }
 
+        /**
+         * Specify a Limit clause for the Select query
+         * @param start The starting index to select from
+         * @param end The ending index to select from
+         * @return Call Builder#execute to run the query
+         */
         public Builder limit(int start, int end) {
             mLimit = new Limit(start, end);
             return this;
         }
 
+        /**
+         * Executes a Select query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         */
         public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
-            return sqlProvider.select(new Select(mClause, mOrderBy, mLimit), sqlProvider.getResolver().getSQLQuery(classDef));
+            return select(
+                    new Select(mClause, mOrderBy, mLimit),
+                    classDef,
+                    sqlProvider
+            );
         }
 
+        /**
+         * Executes a Select query that expects a single result
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         */
         public <T> T executeSingle(Class<T> classDef, SQLProvider sqlProvider) {
-            return sqlProvider.selectSingle(
+            return selectSingle(
                     new Select(mClause, mOrderBy, mLimit),
-                    sqlProvider.getResolver().getSQLQuery(classDef)
+                    classDef,
+                    sqlProvider
             );
         }
     }

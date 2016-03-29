@@ -16,7 +16,7 @@
 package com.memtrip.sqlking.operation.clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Where<T> implements Clause {
     private String mRow;
@@ -55,9 +55,20 @@ public class Where<T> implements Clause {
         return mValue;
     }
 
-    public Where(String row, Exp expression, T value) {
+    private Where(String row, Exp expression, T value) {
         mRow = row;
         mExpression = expression;
         mValue = value;
+    }
+
+    /**
+     * Specifies a SQLite WHERE clause
+     * @param row  The row to perform the clause on
+     * @param expression The type of expression that will evaluate the value
+     * @param value  The value being evaluated
+     * @return Where clause
+     */
+    public static Where where(String row, Exp expression, Object value) {
+        return new Where(row, expression, value);
     }
 }

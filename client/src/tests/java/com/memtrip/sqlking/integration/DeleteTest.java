@@ -18,62 +18,67 @@ package com.memtrip.sqlking.integration;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.integration.models.User;
 import com.memtrip.sqlking.integration.utils.SetupUser;
-import com.memtrip.sqlking.operation.clause.In;
 import com.memtrip.sqlking.operation.clause.Where;
 import com.memtrip.sqlking.operation.function.Delete;
 import com.memtrip.sqlking.operation.function.Select;
 
 import org.junit.Before;
 
+import static com.memtrip.sqlking.operation.clause.In.in;
+import static com.memtrip.sqlking.operation.clause.Where.where;
+
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class DeleteTest extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
+        getSetupUser().setupFourTestUsers(getSQLDatabase());
     }
 
     @org.junit.Test
     public void testAllUsersAreDeleted() {
-        Delete.getBuilder().execute(User.class, getSQLProvider());
+        int deletedRows = Delete.getBuilder().execute(User.class, getSQLDatabase());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().execute(User.class, getSQLDatabase());
 
         // All of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 0 rows will be selected
         assertEquals(0, users.length);
+        assertEquals(4, deletedRows);
     }
 
     @org.junit.Test
     public void testSingleUserIsDeleted() {
-        Delete.getBuilder()
-            .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
-            .execute(User.class, getSQLProvider());
+        int deletedRows = Delete.getBuilder()
+            .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
+            .execute(User.class, getSQLDatabase());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().execute(User.class, getSQLDatabase());
 
         // 1 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 3 rows will be selected
         assertEquals(3, users.length);
+        assertEquals(1, deletedRows);
     }
 
     @org.junit.Test
     public void testUsersAreDeleted() {
-        Delete.getBuilder()
-            .where(new In(Q.UserSQLQuery.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
-            .execute(User.class, getSQLProvider());
+        int deletedRows = Delete.getBuilder()
+            .where(in(Q.UserSQLQuery.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
+            .execute(User.class, getSQLDatabase());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().execute(User.class, getSQLDatabase());
 
         // 3 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 1 rows will be selected
         assertEquals(1, users.length);
+        assertEquals(3, deletedRows);
     }
 }

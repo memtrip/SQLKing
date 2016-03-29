@@ -18,30 +18,32 @@ package com.memtrip.sqlking.integration;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.integration.models.User;
 import com.memtrip.sqlking.integration.utils.SetupUser;
-import com.memtrip.sqlking.operation.clause.And;
-import com.memtrip.sqlking.operation.clause.In;
-import com.memtrip.sqlking.operation.clause.Or;
 import com.memtrip.sqlking.operation.clause.Where;
 import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 import org.junit.Before;
 
+import static com.memtrip.sqlking.operation.clause.And.and;
+import static com.memtrip.sqlking.operation.clause.In.in;
+import static com.memtrip.sqlking.operation.clause.Or.or;
+import static com.memtrip.sqlking.operation.clause.Where.where;
+
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class ReadTest extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
+        getSetupUser().setupFourTestUsers(getSQLDatabase());
     }
 
     @org.junit.Test
     public void testAllUsersAreSelected() {
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().execute(User.class, getSQLDatabase());
 
         // 4 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 4 rows will be selected
@@ -51,8 +53,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToSingleSelection() {
         User user = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .executeSingle(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
     }
@@ -60,8 +62,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToBooleanSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, true))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, true))
+                .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 2 rows will be selected
@@ -71,8 +73,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToLongSelection() {
         User user = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
-                .executeSingle(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
         assertEquals(SetupUser.CLYDE_TIMESTAMP, user.getTimestamp());
@@ -82,8 +84,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -93,8 +95,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanOrEqualToSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // All 4 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 4 rows will be selected
@@ -104,8 +106,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLessThanSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN, SetupUser.ANGIE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN, SetupUser.ANGIE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -115,8 +117,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLessThanOrEqualToSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 4 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 4 rows will be selected
@@ -126,8 +128,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeStartingWithSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "jo%"))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "jo%"))
+                .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be selected
@@ -137,8 +139,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeEndingWithSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%e"))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%e"))
+                .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 2 rows will be selected
@@ -148,8 +150,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeContainingSelection() {
         User[] users = Select.getBuilder()
-                .where(new Where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%lyd%"))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%lyd%"))
+                .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be selected
@@ -159,8 +161,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testInStringSelection() {
         User[] users = Select.getBuilder()
-                .where(new In(Q.UserSQLQuery.USERNAME, SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
-                .execute(User.class, getSQLProvider());
+                .where(in(Q.UserSQLQuery.USERNAME, SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
+                .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 2 rows will be selected
@@ -170,8 +172,8 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testInLongSelection() {
         User[] users = Select.getBuilder()
-                .where(new In(Q.UserSQLQuery.TIMESTAMP, SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(in(Q.UserSQLQuery.TIMESTAMP, SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -181,11 +183,11 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testOrWhereInQueryIsBuiltFromClause() {
         User[] users = Select.getBuilder()
-                .where(new Or(
-                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                        new In(Q.UserSQLQuery.TIMESTAMP, SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)
+                .where(or(
+                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                        in(Q.UserSQLQuery.TIMESTAMP, SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)
                 ))
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -196,12 +198,12 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testAndEqualOperationsSelection() {
         User[] users = Select.getBuilder()
-                .where(new And(
-                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                        new Where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, SetupUser.CLYDE_IS_REGISTERED),
-                        new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP)
+                .where(and(
+                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                        where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, SetupUser.CLYDE_IS_REGISTERED),
+                        where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP)
                 ))
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be selected
@@ -211,11 +213,11 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testOrEqualOperationsSelection() {
         User[] users = Select.getBuilder()
-                .where(new Or(
-                        new Where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.CLYDE_USER_NAME),
-                        new Where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.ANGIE_USER_NAME)
+                .where(or(
+                        where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.CLYDE_USER_NAME),
+                        where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.ANGIE_USER_NAME)
                 ))
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 2 rows will be selected
@@ -226,17 +228,17 @@ public class ReadTest extends IntegrationTest {
     public void testAndOrEqualsOperationsSelection() {
         User[] users = Select.getBuilder()
                 .where(
-                        new And(
-                                new Or(
-                                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                                        new Where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME)
+                        and(
+                                or(
+                                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME)
                                 ),
-                                new And(
-                                        new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP)
+                                and(
+                                        where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP)
                                 )
                         )
                 )
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be selected
@@ -247,7 +249,7 @@ public class ReadTest extends IntegrationTest {
     public void testNumericOrderByAscSelection() {
         User[] users = Select.getBuilder()
                 .orderBy(Q.UserSQLQuery.TIMESTAMP, OrderBy.Order.ASC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // clyde, gill, josh, angie is the timestamp ascending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
@@ -263,7 +265,7 @@ public class ReadTest extends IntegrationTest {
     public void testNumericOrderByDescSelection() {
         User[] users = Select.getBuilder()
                 .orderBy(Q.UserSQLQuery.TIMESTAMP, OrderBy.Order.DESC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // angie, josh, gill, clyde is the timestamp descending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
@@ -279,7 +281,7 @@ public class ReadTest extends IntegrationTest {
     public void testAlphaOrderByAscSelection() {
         User[] users = Select.getBuilder()
                 .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.ASC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // angie, clyde, gill, josh is the username ascending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
@@ -295,7 +297,7 @@ public class ReadTest extends IntegrationTest {
     public void testAlphaOrderByDescSelection() {
         User[] users = Select.getBuilder()
                 .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         // josh, gill, clyde, angie is the username descending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
@@ -312,7 +314,7 @@ public class ReadTest extends IntegrationTest {
         User[] users = Select.getBuilder()
                 .limit(0, 2)
                 .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         assertEquals(2, users.length);
         assertEquals(SetupUser.JOSH_USER_NAME, users[0].getUsername());
@@ -324,7 +326,7 @@ public class ReadTest extends IntegrationTest {
         User[] users = Select.getBuilder()
                 .limit(2,4)
                 .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
-                .execute(User.class, getSQLProvider());
+                .execute(User.class, getSQLDatabase());
 
         assertEquals(2, users.length);
         assertEquals(SetupUser.CLYDE_USER_NAME, users[0].getUsername());

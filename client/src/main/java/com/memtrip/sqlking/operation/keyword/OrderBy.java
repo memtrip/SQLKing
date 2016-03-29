@@ -16,7 +16,7 @@
 package com.memtrip.sqlking.operation.keyword;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class OrderBy {
     private String mField;

@@ -16,7 +16,7 @@
 package com.memtrip.sqlking.operation.clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class And implements Clause {
     private Clause[] mClause;
@@ -25,7 +25,16 @@ public class And implements Clause {
         return mClause;
     }
 
-    public And(Clause... clause) {
+    private And(Clause... clause) {
         mClause = clause;
+    }
+
+    /**
+     * Specifies a SQLite AND operator
+     * @param clause  Combine multiple conditions
+     * @return And operator
+     */
+    public static And and(Clause... clause) {
+        return new And(clause);
     }
 }

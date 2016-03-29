@@ -15,14 +15,15 @@
  */
 package com.memtrip.sqlking.operation.function;
 
-import com.memtrip.sqlking.Model;
+import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * Executes a Count query against the SQLite database
+ * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Count {
+public class Count extends Query {
     private Clause[] mClause;
 
     public Clause[] getClause() {
@@ -42,15 +43,27 @@ public class Count {
 
         private Builder() { }
 
+        /**
+         * Specify a Where clause for the Count query
+         * @param clause Where clause
+         * @return Call Builder#execute to run the query
+         */
         public Builder where(Clause... clause) {
             mClause = clause;
             return this;
         }
 
-        public long execute(Class<? extends Model> classDef, SQLProvider sqlProvider) {
-            return sqlProvider.count(
+        /**
+         * Execute a Count query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return The row count returned by the query
+         */
+        public long execute(Class<?> classDef, SQLProvider sqlProvider) {
+            return count(
                     new Count(mClause),
-                    sqlProvider.getResolver().getSQLQuery(classDef)
+                    classDef,
+                    sqlProvider
             );
         }
     }

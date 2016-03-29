@@ -15,16 +15,15 @@
  */
 package com.memtrip.sqlking.integration.models;
 
-import com.memtrip.sqlking.Model;
 import com.memtrip.sqlking.common.Member;
 import com.memtrip.sqlking.common.Table;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 @Table
-public class Post implements Model {
-    @Member  private String id;
+public class Post {
+    @Member private String id;
     @Member private String title;
     @Member private byte[] blob;
     @Member private long timestamp;

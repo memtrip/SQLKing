@@ -15,19 +15,20 @@
  */
 package com.memtrip.sqlking.integration.models;
 
-import com.memtrip.sqlking.Model;
 import com.memtrip.sqlking.common.Member;
 import com.memtrip.sqlking.common.Table;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 @Table
-public class User implements Model {
+public class User {
     @Member private String username;
     @Member private long timestamp;
     @Member private boolean isRegistered;
     @Member private byte[] profilePicture;
+    @Member private double rating;
+    @Member private int count;
 
     public String getUsername() {
         return username;
@@ -59,5 +60,21 @@ public class User implements Model {
 
     public void setProfilePicture(byte[] newVal) {
         profilePicture = newVal;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

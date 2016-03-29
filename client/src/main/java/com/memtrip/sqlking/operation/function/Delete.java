@@ -15,14 +15,15 @@
  */
 package com.memtrip.sqlking.operation.function;
 
-import com.memtrip.sqlking.Model;
+import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * Executes a Delete query against the SQLite database
+ * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Delete {
+public class Delete extends Query {
     private Clause[] mConditions;
 
     public Clause[] getConditions() {
@@ -42,15 +43,27 @@ public class Delete {
 
         private Builder() { }
 
+        /**
+         * Specify a Where clause for the Delete query
+         * @param clause Where clause
+         * @return Call Builder#execute to run the query
+         */
         public Builder where(Clause... clause) {
             mClause = clause;
             return this;
         }
 
-        public boolean execute(Class<? extends Model> classDef, SQLProvider sqlProvider) {
-            return sqlProvider.delete(
+        /**
+         * Executes a Delete query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return The rows affected by the Delete query
+         */
+        public int execute(Class<?> classDef, SQLProvider sqlProvider) {
+            return delete(
                     new Delete(mClause),
-                    sqlProvider.getResolver().getSQLQuery(classDef)
+                    classDef,
+                    sqlProvider
             );
         }
     }

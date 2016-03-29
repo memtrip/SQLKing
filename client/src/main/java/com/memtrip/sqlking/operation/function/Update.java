@@ -17,15 +17,16 @@ package com.memtrip.sqlking.operation.function;
 
 import android.content.ContentValues;
 
-import com.memtrip.sqlking.Model;
+import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.clause.Where;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * Executes an Update query against the SQLite database
+ * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Update {
+public class Update extends Query {
     private ContentValues mContentValues;
     private Clause[] mConditions;
 
@@ -47,23 +48,39 @@ public class Update {
     }
 
     public static class Builder {
-        private ContentValues mContentValues;
-        private Clause[] mConditions;
+        private ContentValues mValues;
+        private Clause[] mClause;
 
-        public Builder values(ContentValues contentValues) {
-            mContentValues = contentValues;
+        /**
+         * Specify a Where clause for the Update query
+         * @param clause Where clause
+         * @return Call Builder#execute to run the query
+         */
+        public Builder where(Where... clause) {
+            mClause = clause;
             return this;
         }
 
-        public Builder where(Where... conditions) {
-            mConditions = conditions;
+        /**
+         * Specify the values for the Update query
+         * @param values The values that are being updated
+         * @return Call Builder#execute to run the query
+         */
+        public Builder values(ContentValues values) {
+            mValues = values;
             return this;
         }
 
-        public void execute(Class<? extends Model> classDef, SQLProvider sqlProvider) {
-            sqlProvider.update(
-                    new Update(mContentValues,mConditions),
-                    sqlProvider.getResolver().getSQLQuery(classDef)
+        /**
+         * Executes an Update query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         */
+        public void execute(Class<?> classDef, SQLProvider sqlProvider) {
+            update(
+                    new Update(mValues, mClause),
+                    classDef,
+                    sqlProvider
             );
         }
     }

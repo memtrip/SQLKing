@@ -17,32 +17,31 @@ package com.memtrip.sqlking.database;
 
 import android.content.Context;
 
-import com.memtrip.sqlking.Model;
 import com.memtrip.sqlking.common.Resolver;
 import com.memtrip.sqlking.common.SQLQuery;
 
 /**
  * Build the SQL database based on the provided models
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class SQLInit {
 
-    public static SQLDatabase createDatabase(String name,
+    public static SQLProvider createDatabase(String name,
                                              int version,
                                              Resolver resolver,
                                              Context context,
-                                             Class<? extends Model> ... modelClassDefs) {
+                                             Class<?> ... modelClassDef) {
 
-        String[] schemaArray = new String[modelClassDefs.length];
-        String[] tableNameArray = new String[modelClassDefs.length];
+        String[] schemaArray = new String[modelClassDef.length];
+        String[] tableNameArray = new String[modelClassDef.length];
 
-        for (int i = 0; i < modelClassDefs.length; i++) {
-            SQLQuery sqlQuery = resolver.getSQLQuery(modelClassDefs[i]);
+        for (int i = 0; i < modelClassDef.length; i++) {
+            SQLQuery sqlQuery = resolver.getSQLQuery(modelClassDef[i]);
             schemaArray[i] = sqlQuery.getTableInsertQuery();
             tableNameArray[i] = sqlQuery.getTableName();
         }
 
         SQLOpen sqlOpen = new SQLOpen(name, version, schemaArray, tableNameArray, context);
-        return new SQLDatabase(sqlOpen.getDatabase());
+        return new SQLProvider(sqlOpen.getDatabase(), resolver);
     }
 }

@@ -23,29 +23,31 @@ import com.memtrip.sqlking.operation.function.Count;
 
 import org.junit.Before;
 
+import static com.memtrip.sqlking.operation.clause.Where.where;
+
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public class CountTest extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
+        getSetupUser().setupFourTestUsers(getSQLDatabase());
     }
 
     @org.junit.Test
     public void testAllUsersAreCounted() {
-        long count = Count.getBuilder().execute(User.class, getSQLProvider());
+        long count = Count.getBuilder().execute(User.class, getSQLDatabase());
         assertEquals(4, count);
     }
 
     @org.junit.Test
     public void testEqualToCount() {
         long count = Count.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be counted
@@ -55,8 +57,8 @@ public class CountTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanCount() {
         long count = Count.getBuilder()
-                .where(new Where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be counted

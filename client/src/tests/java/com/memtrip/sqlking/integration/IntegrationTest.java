@@ -26,14 +26,14 @@ import com.memtrip.sqlking.integration.utils.SetupUser;
 import org.junit.Before;
 
 /**
- * @author Samuel Kirton <a href="mailto:sam@memtrip.com" />
+ * @author Samuel Kirton [sam@memtrip.com]
  */
 public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<Activity> {
     private Setup mSetup;
     private SetupUser mSetupUser;
 
-    protected SQLProvider getSQLProvider() {
-        return mSetup.getSQLProvider();
+    protected SQLProvider getSQLDatabase() {
+        return mSetup.getSQLDatabase();
     }
 
     protected SetupUser getSetupUser() {
