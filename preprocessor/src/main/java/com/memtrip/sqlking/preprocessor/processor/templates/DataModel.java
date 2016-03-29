@@ -2,6 +2,7 @@ package com.memtrip.sqlking.preprocessor.processor.templates;
 
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.templates.method.AssembleCreateTableMethod;
+import com.memtrip.sqlking.preprocessor.processor.templates.method.FormatConstantMethod;
 import com.memtrip.sqlking.preprocessor.processor.templates.method.GetCursorGetterMethod;
 import com.memtrip.sqlking.preprocessor.processor.templates.method.GetInsertValueMethod;
 
@@ -19,6 +20,7 @@ public class DataModel {
         map.putAll(GetCursorGetterMethod.getMethodMap());
         map.putAll(GetInsertValueMethod.getMethodMap());
         map.putAll(AssembleCreateTableMethod.getMethodMap());
+        map.putAll(FormatConstantMethod.getMethodMap());
 
         return map;
     }

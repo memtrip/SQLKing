@@ -5,10 +5,6 @@ import android.content.ContentValues;
 import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.common.Resolver;
 
-<#list tables as table>
-import ${table.getPackage()}.${table.getName()};
-</#list>
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -19,11 +15,11 @@ public class Q {
         @Override
         public SQLQuery getSQLQuery(Class<?> classDef) {
             <#assign isAssignableFrom><#list tables as table>
-            } else if (classDef.isAssignableFrom(${table.getName()?cap_first}.class)) {
-                return new ${table.getName()?cap_first}SQLQuery();
+            } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()?cap_first}.class)) {
+                return new ${table.getName()?cap_first}();
             </#list>
             }</#assign>
-            ${isAssignableFrom?remove_beginning("            } else ")} else {
+${isAssignableFrom?remove_beginning("            } else ")} else {
                 throw new IllegalStateException("Please ensure all SQL tables are annotated with @Table");
             }
         }
@@ -31,10 +27,10 @@ public class Q {
 <#list tables as table>
 <#assign getColumnNames><#list table.getMembers() as member>"${member.getName()}",</#list></#assign>
 <#assign unionInsertColumnNames><#list table.getMembers() as member>${member.getName()},</#list></#assign>
-
-    public static class ${table.getName()?cap_first}SQLQuery implements SQLQuery {
+<#assign packagedTableName>${table.getPackage()}.${table.getName()?cap_first}</#assign>
+    public static class ${table.getName()?cap_first} implements SQLQuery {
         <#list table.getMembers() as member>
-        public static final String ${member.getName()?upper_case} = "${member.getName()}";
+        public static final String ${formatConstant(member.getName())} = "${member.getName()}";
         </#list>
 
         @Override
@@ -79,7 +75,7 @@ public class Q {
             sb.append("INSERT INTO ${table.getName()?cap_first} ");
 
             for (int i = 0; i < models.size(); i++) {
-                ${table.getName()} ${table.getName()?lower_case} = (${table.getName()})models.get(i);
+                ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})models.get(i);
 
                 if (i == 0){
                     sb.append("(${unionInsertColumnNames?remove_ending(",")}) ");
@@ -116,16 +112,16 @@ public class Q {
         }
 
         @Override
-        public ${table.getName()?cap_first}[] retrieveSQLSelectResults(Cursor cursor) {
-            ${table.getName()?cap_first}[] result = new ${table.getName()?cap_first}[cursor.getCount()];
+        public ${packagedTableName}[] retrieveSQLSelectResults(Cursor cursor) {
+            ${packagedTableName}[] result = new ${packagedTableName}[cursor.getCount()];
 
             cursor.moveToFirst();
             for (int i = 0; !cursor.isAfterLast(); i++) {
-                ${table.getName()?cap_first} ${table.getName()?lower_case} = new ${table.getName()?cap_first}();
+                ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
 
                 for (int x = 0; x < cursor.getColumnCount(); x++) {
                 <#assign retrieveSQLSelectResults><#list table.getMembers() as member>
-                    } else if (cursor.getColumnName(x).equals(${member.getName()?upper_case})) {
+                    } else if (cursor.getColumnName(x).equals(${formatConstant(member.getName())})) {
                         ${table.getName()?lower_case}.set${member.getName()?cap_first}(${getCursorGetter(member.getType())});
                     </#list>
                     }</#assign>
@@ -148,11 +144,11 @@ public class Q {
 
         @Override
         public ContentValues getContentValues(Object model) {
-            ${table.getName()?cap_first} ${table.getName()?lower_case} = (${table.getName()?cap_first})model;
+            ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 
             ContentValues contentValues = new ContentValues();
             <#list table.getMembers() as member>
-            contentValues.put(${member.getName()?upper_case}, ${table.getName()?lower_case}.get${member.getName()?cap_first}());
+            contentValues.put(${formatConstant(member.getName())}, ${table.getName()?lower_case}.get${member.getName()?cap_first}());
             </#list>
 
             return contentValues;

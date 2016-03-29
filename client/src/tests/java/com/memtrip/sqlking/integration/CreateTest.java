@@ -99,11 +99,11 @@ public class CreateTest  extends IntegrationTest {
 
         // verify
         User angieUser = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
+                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
                 .executeSingle(User.class, getSQLDatabase());
 
         User samUser = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
+                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
                 .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());

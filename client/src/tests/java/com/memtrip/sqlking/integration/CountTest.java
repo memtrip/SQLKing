@@ -46,7 +46,7 @@ public class CountTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToCount() {
         long count = Count.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -57,7 +57,7 @@ public class CountTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanCount() {
         long count = Count.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the

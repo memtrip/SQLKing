@@ -53,7 +53,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToSingleSelection() {
         User user = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
@@ -62,7 +62,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToBooleanSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, true))
+                .where(where(Q.User.IS_REGISTERED, Where.Exp.EQUAL_TO, true))
                 .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -73,7 +73,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testEqualToLongSelection() {
         User user = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
                 .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
@@ -84,7 +84,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -95,7 +95,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testMoreThanOrEqualToSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // All 4 of the users created by #setupFourTestUsers will match the
@@ -106,7 +106,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLessThanSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN, SetupUser.ANGIE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.LESS_THAN, SetupUser.ANGIE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -117,7 +117,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLessThanOrEqualToSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.LESS_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.LESS_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 4 of the users created by #setupFourTestUsers will match the
@@ -128,7 +128,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeStartingWithSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "jo%"))
+                .where(where(Q.User.USERNAME, Where.Exp.LIKE, "jo%"))
                 .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -139,7 +139,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeEndingWithSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%e"))
+                .where(where(Q.User.USERNAME, Where.Exp.LIKE, "%e"))
                 .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -150,7 +150,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testLikeContainingSelection() {
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.LIKE, "%lyd%"))
+                .where(where(Q.User.USERNAME, Where.Exp.LIKE, "%lyd%"))
                 .execute(User.class, getSQLDatabase());
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -161,7 +161,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testInStringSelection() {
         User[] users = Select.getBuilder()
-                .where(in(Q.UserSQLQuery.USERNAME, SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
+                .where(in(Q.User.USERNAME, SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
                 .execute(User.class, getSQLDatabase());
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -172,7 +172,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testInLongSelection() {
         User[] users = Select.getBuilder()
-                .where(in(Q.UserSQLQuery.TIMESTAMP, SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
+                .where(in(Q.User.TIMESTAMP, SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -184,8 +184,8 @@ public class ReadTest extends IntegrationTest {
     public void testOrWhereInQueryIsBuiltFromClause() {
         User[] users = Select.getBuilder()
                 .where(or(
-                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                        in(Q.UserSQLQuery.TIMESTAMP, SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)
+                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                        in(Q.User.TIMESTAMP, SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)
                 ))
                 .execute(User.class, getSQLDatabase());
 
@@ -199,9 +199,9 @@ public class ReadTest extends IntegrationTest {
     public void testAndEqualOperationsSelection() {
         User[] users = Select.getBuilder()
                 .where(and(
-                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                        where(Q.UserSQLQuery.ISREGISTERED, Where.Exp.EQUAL_TO, SetupUser.CLYDE_IS_REGISTERED),
-                        where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP)
+                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                        where(Q.User.IS_REGISTERED, Where.Exp.EQUAL_TO, SetupUser.CLYDE_IS_REGISTERED),
+                        where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP)
                 ))
                 .execute(User.class, getSQLDatabase());
 
@@ -214,8 +214,8 @@ public class ReadTest extends IntegrationTest {
     public void testOrEqualOperationsSelection() {
         User[] users = Select.getBuilder()
                 .where(or(
-                        where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.CLYDE_USER_NAME),
-                        where(Q.UserSQLQuery.USERNAME,Where.Exp.EQUAL_TO,SetupUser.ANGIE_USER_NAME)
+                        where(Q.User.USERNAME,Where.Exp.EQUAL_TO,SetupUser.CLYDE_USER_NAME),
+                        where(Q.User.USERNAME,Where.Exp.EQUAL_TO,SetupUser.ANGIE_USER_NAME)
                 ))
                 .execute(User.class, getSQLDatabase());
 
@@ -230,11 +230,11 @@ public class ReadTest extends IntegrationTest {
                 .where(
                         and(
                                 or(
-                                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
-                                        where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME)
+                                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME)
                                 ),
                                 and(
-                                        where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP)
+                                        where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, SetupUser.ANGIE_TIMESTAMP)
                                 )
                         )
                 )
@@ -248,7 +248,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testNumericOrderByAscSelection() {
         User[] users = Select.getBuilder()
-                .orderBy(Q.UserSQLQuery.TIMESTAMP, OrderBy.Order.ASC)
+                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
                 .execute(User.class, getSQLDatabase());
 
         // clyde, gill, josh, angie is the timestamp ascending order of the users created
@@ -264,7 +264,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testNumericOrderByDescSelection() {
         User[] users = Select.getBuilder()
-                .orderBy(Q.UserSQLQuery.TIMESTAMP, OrderBy.Order.DESC)
+                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.DESC)
                 .execute(User.class, getSQLDatabase());
 
         // angie, josh, gill, clyde is the timestamp descending order of the users created
@@ -280,7 +280,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testAlphaOrderByAscSelection() {
         User[] users = Select.getBuilder()
-                .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.ASC)
+                .orderBy(Q.User.USERNAME, OrderBy.Order.ASC)
                 .execute(User.class, getSQLDatabase());
 
         // angie, clyde, gill, josh is the username ascending order of the users created
@@ -296,7 +296,7 @@ public class ReadTest extends IntegrationTest {
     @org.junit.Test
     public void testAlphaOrderByDescSelection() {
         User[] users = Select.getBuilder()
-                .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
+                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
                 .execute(User.class, getSQLDatabase());
 
         // josh, gill, clyde, angie is the username descending order of the users created
@@ -313,7 +313,7 @@ public class ReadTest extends IntegrationTest {
     public void testLimitLowerBoundSelection() {
         User[] users = Select.getBuilder()
                 .limit(0, 2)
-                .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
+                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
                 .execute(User.class, getSQLDatabase());
 
         assertEquals(2, users.length);
@@ -325,7 +325,7 @@ public class ReadTest extends IntegrationTest {
     public void testLimitUpperBoundSelection() {
         User[] users = Select.getBuilder()
                 .limit(2,4)
-                .orderBy(Q.UserSQLQuery.USERNAME, OrderBy.Order.DESC)
+                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
                 .execute(User.class, getSQLDatabase());
 
         assertEquals(2, users.length);

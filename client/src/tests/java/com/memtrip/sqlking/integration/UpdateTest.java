@@ -46,18 +46,18 @@ public class UpdateTest extends IntegrationTest {
         long timestamp = System.currentTimeMillis();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.UserSQLQuery.ISREGISTERED, true);
-        contentValues.put(Q.UserSQLQuery.TIMESTAMP, timestamp);
+        contentValues.put(Q.User.IS_REGISTERED, true);
+        contentValues.put(Q.User.TIMESTAMP, timestamp);
 
         // exercise
         Update.getBuilder()
                 .values(contentValues)
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .execute(User.class, getSQLDatabase());
 
         // verify
         User user = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .executeSingle(User.class, getSQLDatabase());
 
         assertEquals(true, user.getIsRegistered());
@@ -71,9 +71,9 @@ public class UpdateTest extends IntegrationTest {
         String newUsername = "CHANGED";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.UserSQLQuery.ISREGISTERED, true);
-        contentValues.put(Q.UserSQLQuery.TIMESTAMP, timestamp);
-        contentValues.put(Q.UserSQLQuery.USERNAME, newUsername);
+        contentValues.put(Q.User.IS_REGISTERED, true);
+        contentValues.put(Q.User.TIMESTAMP, timestamp);
+        contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
         Update.getBuilder()
@@ -98,19 +98,19 @@ public class UpdateTest extends IntegrationTest {
         String newUsername = "CHANGED";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.UserSQLQuery.ISREGISTERED, true);
-        contentValues.put(Q.UserSQLQuery.TIMESTAMP, newTimestamp);
-        contentValues.put(Q.UserSQLQuery.USERNAME, newUsername);
+        contentValues.put(Q.User.IS_REGISTERED, true);
+        contentValues.put(Q.User.TIMESTAMP, newTimestamp);
+        contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
         Update.getBuilder()
                 .values(contentValues)
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
                 .execute(User.class, getSQLDatabase());
 
         // verify
         User[] users = Select.getBuilder()
-                .where(where(Q.UserSQLQuery.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
+                .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
                 .execute(User.class, getSQLDatabase());
 
         // 3 of the users created by #setupFourTestUsers will match the
