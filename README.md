@@ -1,9 +1,9 @@
 SQLKing
 ======================
 
-SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by Model
-classes and CRUD classes expose an expressive api for executing SQLite queries.
-####Gradle dependency####
+SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
+annotations and CRUD classes expose an expressive api for executing SQLite queries.
+####Gradle dependencies####
 ```groovy
 dependencies {
     apt 'com.memtrip.sqlking:sqlking-preprocessor:1.0'
@@ -12,9 +12,9 @@ dependencies {
 ```
 
 ####Define your models###
-SQL tables are defined by POJOs that are annotated with `@Table`. The getter and setter methods must
-match the member variables, i.e; `private String name;` must be accompanied by
-`getName()` / `setName(String newVal)` methods.
+SQL tables are defined by POJOs that are annotated with `@Table`. Table columns are annotated with `@Member`
+and must have matching getter / setter methods i.e; `private String name;` must be accompanied by both a
+`String getName()` and a `setName(String newVal)` method.
 
 ```java
 @Table
@@ -78,6 +78,9 @@ String usernameColumnFromUserTable = Q.User.USERNAME;
 ####Initialise the database####
 SQLKing will create a database based on the POJOs that are annotated with @Table,
 when these POJOs are changed or new POJOs are added, the version number argument must be incremented.
+The `SQLProvider` instance that is returned from `SQLInit` must be kept throughout the lifecycle of your application,
+it is required by the `execute()` and `rx()` methods. We recommend you attach inject it as a dependency or attach
+it to your Application context.
 NOTE: Incrementing the version number will drop and recreate the database.
 
 ```java
@@ -86,7 +89,7 @@ public void setUp() {
          "SQLKing",
          1,
          new Q.DefaultResolver(),
-         mContext,
+         getContext(),
          User.class,
          Post.class
     );
@@ -113,6 +116,8 @@ Select.getBuilder()
     });
 ```
 
+The `execute()` method returns results directly. NOTE: `execute()` must be ran on a separate thread.
+
 ```java
 User user = new User();
 user.setUsername("12345678");
@@ -134,19 +139,19 @@ contentValues.put(Q.User.IS_REGISTERED, true);
 contentValues.put(Q.User.TIMESTAMP, System.currentTimeMillis());
 
 // UPDATE User SET isRegistered = 'true', timestamp = '123456789'
-Update.getBuilder()
+int rowsUpdated = Update.getBuilder()
         .values(contentValues)
         .execute(User.class, getSQLProvider());
 ```
 
 ```java
 // DELETE FROM User;
-User[] users = Delete.getBuilder().execute(User.class, sqlProvider);
+int rowsDeleted = Delete.getBuilder().execute(User.class, sqlProvider);
 ```
 
 ```java
 // SELECT Count(*) FROM User;
-long count = Count.getBuilder().execute(User.class, sqlProvider);
+int count = Count.getBuilder().execute(User.class, sqlProvider);
 ```
 
 ####Clauses####
@@ -202,7 +207,7 @@ User[] users = Select.getBuilder()
 ```
 
 ####Keywords####
-The `OrderBy` and `Limit` classes are used to manipulate the results of the `SELECT` class
+The `OrderBy` and `Limit` classes are used to manipulate the results of the `Select` class
 
 ```java
 // SELECT * FROM user ORDER BY username DESC
@@ -224,6 +229,7 @@ The `tests/java/com/memtrip/sqlking` package contains a full set of unit and int
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####
+- Rename the @Member annotation to @Column
 - Add the Random() method to OrderBy
 - Execute CREATE INDEX queries for @Member annotations that use an index
 - Implement the @Member annotation foreign_key functionality
