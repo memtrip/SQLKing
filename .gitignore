@@ -2,8 +2,6 @@ local.properties
 bin
 gen
 org.eclipse.jdt.core.prefs
-compiler/.idea
-compiler/target
 *.iml
 .gradle
 .idea

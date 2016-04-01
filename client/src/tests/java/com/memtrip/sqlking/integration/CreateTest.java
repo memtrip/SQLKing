@@ -35,7 +35,7 @@ public class CreateTest  extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
+        getSetupUser().tearDownFourTestUsers(getSQLProvider());
     }
 
     @Test
@@ -51,10 +51,10 @@ public class CreateTest  extends IntegrationTest {
         user.setTimestamp(USER_TIMESTAMP);
 
         // exercise
-        Insert.getBuilder().values(user).execute(User.class, getSQLDatabase());
+        Insert.getBuilder().values(user).execute(User.class, getSQLProvider());
 
         // verify
-        User responseUser = Select.getBuilder().execute(User.class, getSQLDatabase())[0];
+        User responseUser = Select.getBuilder().executeOne(User.class, getSQLProvider());
 
         assertTrue(user.getUsername().equals(responseUser.getUsername()));
         assertTrue(user.getTimestamp() == responseUser.getTimestamp());
@@ -95,16 +95,16 @@ public class CreateTest  extends IntegrationTest {
         };
 
         // exercise
-        Insert.getBuilder().values(users).execute(User.class, getSQLDatabase());
+        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
 
         // verify
         User angieUser = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
-                .executeSingle(User.class, getSQLDatabase());
+                .executeOne(User.class, getSQLProvider());
 
         User samUser = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
-                .executeSingle(User.class, getSQLDatabase());
+                .executeOne(User.class, getSQLProvider());
 
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());
         assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
@@ -139,9 +139,9 @@ public class CreateTest  extends IntegrationTest {
             );
         }
 
-        Insert.getBuilder().values(users).execute(User.class, getSQLDatabase());
+        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
 
-        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLDatabase());
+        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
 
         for (int i = 0; i < usersInserted.length; i++) {
             assertEquals(ANGIE_TIMESTAMP+i,usersInserted[i].getTimestamp());

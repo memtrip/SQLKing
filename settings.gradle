@@ -1,1 +1,1 @@
-include ':client', ':compiler'
+include ':client'

@@ -9,6 +9,11 @@ import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.function.Update;
 
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+import rx.Subscriber;
+
 public abstract class Query {
 
     protected static void insert(Insert insert, Class<?> classDef, SQLProvider database) {
@@ -44,14 +49,12 @@ public abstract class Query {
         }
     }
 
-    protected static boolean update(Update update, Class<?> classDef, SQLProvider database) {
-        int result = database.update(
+    protected static int update(Update update, Class<?> classDef, SQLProvider database) {
+        return database.update(
                 getSQLQuery(classDef, database).getTableName(),
                 update.getContentValues(),
                 update.getConditions()
         );
-
-        return result >= 1;
     }
 
     protected static long count(Count count, Class<?> classDef, SQLProvider database) {
@@ -65,6 +68,21 @@ public abstract class Query {
         return database.delete(
                 getSQLQuery(classDef, database).getTableName(),
                 delete.getConditions()
+        );
+    }
+
+    protected static <T> Observable<T> wrapRx(final Callable<T> func) {
+        return Observable.create(
+                new Observable.OnSubscribe<T>() {
+                    @Override
+                    public void call(Subscriber<? super T> subscriber) {
+                        try {
+                            subscriber.onNext(func.call());
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
+                    }
+                }
         );
     }
 

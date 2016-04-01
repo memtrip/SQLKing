@@ -22,6 +22,10 @@ import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.clause.Where;
 
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+
 /**
  * Executes an Update query against the SQLite database
  * @author Samuel Kirton [sam@memtrip.com]
@@ -54,7 +58,7 @@ public class Update extends Query {
         /**
          * Specify a Where clause for the Update query
          * @param clause Where clause
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute or Builder#rx to run the query
          */
         public Builder where(Where... clause) {
             mClause = clause;
@@ -64,7 +68,7 @@ public class Update extends Query {
         /**
          * Specify the values for the Update query
          * @param values The values that are being updated
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute or Builder#rx to run the query
          */
         public Builder values(ContentValues values) {
             mValues = values;
@@ -75,13 +79,29 @@ public class Update extends Query {
          * Executes an Update query
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @return The rows affected by the Update query
          */
-        public void execute(Class<?> classDef, SQLProvider sqlProvider) {
-            update(
+        public int execute(Class<?> classDef, SQLProvider sqlProvider) {
+            return update(
                     new Update(mValues, mClause),
                     classDef,
                     sqlProvider
             );
+        }
+
+        /**
+         * Executes an Update query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return An RxJava Observable
+         */
+        public Observable<Integer> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+            return wrapRx(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return execute(classDef, sqlProvider);
+                }
+            });
         }
     }
 }

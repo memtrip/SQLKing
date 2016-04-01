@@ -32,8 +32,8 @@ public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<A
     private Setup mSetup;
     private SetupUser mSetupUser;
 
-    protected SQLProvider getSQLDatabase() {
-        return mSetup.getSQLDatabase();
+    protected SQLProvider getSQLProvider() {
+        return mSetup.getSQLProvider();
     }
 
     protected SetupUser getSetupUser() {

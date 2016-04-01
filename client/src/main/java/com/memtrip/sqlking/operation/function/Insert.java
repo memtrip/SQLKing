@@ -18,6 +18,10 @@ package com.memtrip.sqlking.operation.function;
 import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+
 /**
  * Executes an Insert query against the SQLite database
  * @author Samuel Kirton [sam@memtrip.com]
@@ -45,7 +49,7 @@ public class Insert extends Query {
         /**
          * Specify the values for the Insert query
          * @param values The values that are being inserted
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute or Builder#rx to run the query
          */
         public Builder values(Object... values) {
             mValues = values;
@@ -63,6 +67,22 @@ public class Insert extends Query {
                     classDef,
                     sqlProvider
             );
+        }
+
+        /**
+         * Executes an Insert query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return An RxJava Observable
+         */
+        public Observable<Void> rx(final Class<? extends Object> classDef, final SQLProvider sqlProvider) {
+            return wrapRx(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    execute(classDef, sqlProvider);
+                    return null; // Void
+                }
+            });
         }
     }
 }

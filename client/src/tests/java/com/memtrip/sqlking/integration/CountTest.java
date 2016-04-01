@@ -33,13 +33,13 @@ public class CountTest extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
-        getSetupUser().setupFourTestUsers(getSQLDatabase());
+        getSetupUser().tearDownFourTestUsers(getSQLProvider());
+        getSetupUser().setupFourTestUsers(getSQLProvider());
     }
 
     @org.junit.Test
     public void testAllUsersAreCounted() {
-        long count = Count.getBuilder().execute(User.class, getSQLDatabase());
+        long count = Count.getBuilder().execute(User.class, getSQLProvider());
         assertEquals(4, count);
     }
 
@@ -47,7 +47,7 @@ public class CountTest extends IntegrationTest {
     public void testEqualToCount() {
         long count = Count.getBuilder()
                 .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // 1 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 1 rows will be counted
@@ -58,7 +58,7 @@ public class CountTest extends IntegrationTest {
     public void testMoreThanCount() {
         long count = Count.getBuilder()
                 .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be counted

@@ -19,6 +19,10 @@ import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+
 /**
  * Executes a Delete query against the SQLite database
  * @author Samuel Kirton [sam@memtrip.com]
@@ -46,7 +50,7 @@ public class Delete extends Query {
         /**
          * Specify a Where clause for the Delete query
          * @param clause Where clause
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute or Builder#rx to run the query
          */
         public Builder where(Clause... clause) {
             mClause = clause;
@@ -65,6 +69,20 @@ public class Delete extends Query {
                     classDef,
                     sqlProvider
             );
+        }
+        /**
+         * Executes a Delete query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return An RxJava Observable
+         */
+        public Observable<Integer> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+            return wrapRx(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return execute(classDef, sqlProvider);
+                }
+            });
         }
     }
 }

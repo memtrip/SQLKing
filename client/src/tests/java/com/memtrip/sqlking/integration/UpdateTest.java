@@ -36,8 +36,8 @@ public class UpdateTest extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLDatabase());
-        getSetupUser().setupFourTestUsers(getSQLDatabase());
+        getSetupUser().tearDownFourTestUsers(getSQLProvider());
+        getSetupUser().setupFourTestUsers(getSQLProvider());
     }
 
     @org.junit.Test
@@ -50,18 +50,20 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.TIMESTAMP, timestamp);
 
         // exercise
-        Update.getBuilder()
+        int updated = Update.getBuilder()
                 .values(contentValues)
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // verify
         User user = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .executeSingle(User.class, getSQLDatabase());
+                .executeOne(User.class, getSQLProvider());
 
         assertEquals(true, user.getIsRegistered());
         assertEquals(timestamp, user.getTimestamp());
+
+        assertEquals(updated, 1);
     }
 
     @org.junit.Test
@@ -76,19 +78,21 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
-        Update.getBuilder()
+        int updated = Update.getBuilder()
                 .values(contentValues)
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // verify
         User[] users = Select.getBuilder()
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         for (User user : users) {
             assertEquals(timestamp, user.getTimestamp());
             assertEquals(true, user.getIsRegistered() );
             assertEquals(newUsername, user.getUsername());
         }
+
+        assertEquals(updated, users.length);
     }
 
     @org.junit.Test
@@ -103,19 +107,21 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
-        Update.getBuilder()
+        int updated = Update.getBuilder()
                 .values(contentValues)
                 .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // verify
         User[] users = Select.getBuilder()
                 .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
-                .execute(User.class, getSQLDatabase());
+                .execute(User.class, getSQLProvider());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected
         // with a timestamp of "0"
         assertEquals(3, users.length);
+
+        assertEquals(updated, users.length);
     }
 }

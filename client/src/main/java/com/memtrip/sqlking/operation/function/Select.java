@@ -21,6 +21,10 @@ import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+
 /**
  * Executes a Select query against the SQLite database
  * @author Samuel Kirton [sam@memtrip.com]
@@ -62,7 +66,7 @@ public class Select extends Query {
         /**
          * Specify a Where clause for the Select query
          * @param clause Where clause
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute, Builder#rx, or Builder#rxSingle to run the query
          */
         public Builder where(Clause... clause) {
             mClause = clause;
@@ -73,7 +77,7 @@ public class Select extends Query {
          * Specify an Order By clause for the Select query
          * @param column The column to use with the Order By clause
          * @param order The direction of the Order By clause
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
          */
         public Builder orderBy(String column, OrderBy.Order order) {
             mOrderBy = new OrderBy(column, order);
@@ -84,7 +88,7 @@ public class Select extends Query {
          * Specify a Limit clause for the Select query
          * @param start The starting index to select from
          * @param end The ending index to select from
-         * @return Call Builder#execute to run the query
+         * @return Call Builder#execute, Builder#rx or Builder#rxSingle to run the query
          */
         public Builder limit(int start, int end) {
             mLimit = new Limit(start, end);
@@ -95,6 +99,7 @@ public class Select extends Query {
          * Executes a Select query
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @return The rows returned by the Select query
          */
         public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
             return select(
@@ -108,13 +113,44 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @return The row returned by the Select query
          */
-        public <T> T executeSingle(Class<T> classDef, SQLProvider sqlProvider) {
+        public <T> T executeOne(Class<T> classDef, SQLProvider sqlProvider) {
             return selectSingle(
                     new Select(mClause, mOrderBy, mLimit),
                     classDef,
                     sqlProvider
             );
+        }
+
+        /**
+         * Executes a Select query
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return An RxJava Observable
+         */
+        public <T> Observable<T[]> rx(final Class<T> classDef, final SQLProvider sqlProvider) {
+            return wrapRx(new Callable<T[]>() {
+                @Override
+                public T[] call() throws Exception {
+                    return execute(classDef, sqlProvider);
+                }
+            });
+        }
+
+        /**
+         * Executes a Select query that expects a single result
+         * @param classDef The class definition that the query should run on
+         * @param sqlProvider Where the magic happens!
+         * @return An RxJava Observable
+         */
+        public <T> Observable<T> rxOne(final Class<T> classDef, final SQLProvider sqlProvider) {
+            return wrapRx(new Callable<T>() {
+                @Override
+                public T call() throws Exception {
+                    return executeOne(classDef, sqlProvider);
+                }
+            });
         }
     }
 }
