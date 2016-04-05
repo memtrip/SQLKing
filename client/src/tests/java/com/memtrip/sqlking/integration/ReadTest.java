@@ -214,8 +214,8 @@ public class ReadTest extends IntegrationTest {
     public void testOrEqualOperationsSelection() {
         User[] users = Select.getBuilder()
                 .where(or(
-                        where(Q.User.USERNAME,Where.Exp.EQUAL_TO,SetupUser.CLYDE_USER_NAME),
-                        where(Q.User.USERNAME,Where.Exp.EQUAL_TO,SetupUser.ANGIE_USER_NAME)
+                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME),
+                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME)
                 ))
                 .execute(User.class, getSQLProvider());
 
@@ -307,6 +307,17 @@ public class ReadTest extends IntegrationTest {
         assertEquals(SetupUser.GILL_USER_NAME, users[1].getUsername());
         assertEquals(SetupUser.CLYDE_USER_NAME, users[2].getUsername());
         assertEquals(SetupUser.ANGIE_USER_NAME, users[3].getUsername());
+    }
+
+    @org.junit.Test
+    public void testOrderByRandom() {
+        User[] users = Select.getBuilder()
+                .orderBy(Q.User.USERNAME, OrderBy.Order.RANDOM)
+                .execute(User.class, getSQLProvider());
+
+        // just check that the results are returned and no error is thrown
+        // TODO: do 100 random queries and ensure that at least one of the ordering is different
+        assertEquals(4, users.length);
     }
 
     @org.junit.Test

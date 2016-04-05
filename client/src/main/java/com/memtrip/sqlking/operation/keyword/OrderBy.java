@@ -24,7 +24,8 @@ public class OrderBy {
 
     public enum Order {
         ASC ("ASC"),
-        DESC ("DESC");
+        DESC ("DESC"),
+        RANDOM ("RANDOM");
 
         private final String mValue;
 

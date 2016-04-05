@@ -190,9 +190,13 @@ public class ClauseHelper {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (orderBy != null) {
-            stringBuilder.append(orderBy.getField());
-            stringBuilder.append(SPACE);
-            stringBuilder.append(orderBy.getOrder().toString());
+            if (orderBy.getOrder() == OrderBy.Order.RANDOM) {
+                stringBuilder.append(orderBy.getOrder().toString() + "()");
+            } else {
+                stringBuilder.append(orderBy.getField());
+                stringBuilder.append(SPACE);
+                stringBuilder.append(orderBy.getOrder().toString());
+            }
         }
 
         return stringBuilder.toString();
