@@ -15,7 +15,7 @@
  */
 package com.memtrip.sqlking.integration.models;
 
-import com.memtrip.sqlking.common.Member;
+import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
 /**
@@ -23,10 +23,10 @@ import com.memtrip.sqlking.common.Table;
  */
 @Table
 public class Post {
-    @Member private String id;
-    @Member private String title;
-    @Member private byte[] blob;
-    @Member private long timestamp;
+    @Column private String id;
+    @Column private String title;
+    @Column private byte[] blob;
+    @Column private long timestamp;
 
     public String getId() {
         return id;

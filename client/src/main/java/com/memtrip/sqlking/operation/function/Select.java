@@ -99,6 +99,7 @@ public class Select extends Query {
          * Executes a Select query
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @param <T> The model object returned from the query
          * @return The rows returned by the Select query
          */
         public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
@@ -113,6 +114,7 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @param <T> The model object returned from the query
          * @return The row returned by the Select query
          */
         public <T> T executeOne(Class<T> classDef, SQLProvider sqlProvider) {
@@ -127,6 +129,7 @@ public class Select extends Query {
          * Executes a Select query
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
         public <T> Observable<T[]> rx(final Class<T> classDef, final SQLProvider sqlProvider) {
@@ -142,6 +145,7 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
+         * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
         public <T> Observable<T> rxOne(final Class<T> classDef, final SQLProvider sqlProvider) {

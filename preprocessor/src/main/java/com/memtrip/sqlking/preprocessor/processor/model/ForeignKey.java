@@ -27,7 +27,7 @@ public class ForeignKey {
     }
 
     private String assembleColumn(Element element) {
-        com.memtrip.sqlking.common.Member member = element.getAnnotation(com.memtrip.sqlking.common.Member.class);
+        com.memtrip.sqlking.common.Column member = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
         return member.foreign_key();
     }
 }

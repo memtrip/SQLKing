@@ -4,7 +4,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 
-public class Member {
+public class Column {
     private Element mElement;
     private String mName;
     private String mType;
@@ -35,7 +35,7 @@ public class Member {
         return mForeignKey != null;
     }
 
-    public Member(Element element) {
+    public Column(Element element) {
         mElement = element;
         mName = assembleName(element);
         mType = assembleType(element);
@@ -56,13 +56,13 @@ public class Member {
     }
 
     private boolean assembleIsIndex(Element element) {
-        com.memtrip.sqlking.common.Member member = element.getAnnotation(com.memtrip.sqlking.common.Member.class);
-        return member.index();
+        com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
+        return column.index();
     }
 
     private ForeignKey assembleForeignKey(Element element) {
-        com.memtrip.sqlking.common.Member member = element.getAnnotation(com.memtrip.sqlking.common.Member.class);
-        String foreignKey = member.foreign_key();
+        com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
+        String foreignKey = column.foreign_key();
         return (!foreignKey.equals("")) ? new ForeignKey(element) : null;
     }
 }

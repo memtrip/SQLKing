@@ -25,12 +25,12 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
         }
     }
 <#list tables as table>
-<#assign getColumnNames><#list table.getMembers() as member>"${member.getName()}",</#list></#assign>
-<#assign unionInsertColumnNames><#list table.getMembers() as member>${member.getName()},</#list></#assign>
+<#assign getColumnNames><#list table.getColumns() as column>"${column.getName()}",</#list></#assign>
+<#assign unionInsertColumnNames><#list table.getColumns() as column>${column.getName()},</#list></#assign>
 <#assign packagedTableName>${table.getPackage()}.${table.getName()?cap_first}</#assign>
     public static class ${table.getName()?cap_first} implements SQLQuery {
-        <#list table.getMembers() as member>
-        public static final String ${formatConstant(member.getName())} = "${member.getName()}";
+        <#list table.getColumns() as column>
+        public static final String ${formatConstant(column.getName())} = "${column.getName()}";
         </#list>
 
         @Override
@@ -80,16 +80,16 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
                 if (i == 0){
                     sb.append("(${unionInsertColumnNames?remove_ending(",")}) ");
                     sb.append("SELECT ");
-                    <#list table.getMembers() as member>
-                    <#assign getter>${table.getName()?lower_case}.get${member.getName()?cap_first}()</#assign>
-                    sb.append("${getInsertValue(member.getType(),getter)} AS ${member.getName()}, ");
+                    <#list table.getColumns() as column>
+                    <#assign getter>${table.getName()?lower_case}.get${column.getName()?cap_first}()</#assign>
+                    sb.append("${getInsertValue(column.getType(),getter)} AS ${column.getName()}, ");
                     </#list>
                     sb.delete(sb.length()-2,sb.length());
                 } else {
                     sb.append(" UNION ALL SELECT ");
-                    <#list table.getMembers() as member>
-                    <#assign getter>${table.getName()?lower_case}.get${member.getName()?cap_first}()</#assign>
-                    sb.append("${getInsertValue(member.getType(),getter)}, ");
+                    <#list table.getColumns() as column>
+                    <#assign getter>${table.getName()?lower_case}.get${column.getName()?cap_first}()</#assign>
+                    sb.append("${getInsertValue(column.getType(),getter)}, ");
                     </#list>
                     sb.delete(sb.length()-2,sb.length());
                 }
@@ -120,9 +120,9 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
                 ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
 
                 for (int x = 0; x < cursor.getColumnCount(); x++) {
-                <#assign retrieveSQLSelectResults><#list table.getMembers() as member>
-                    } else if (cursor.getColumnName(x).equals(${formatConstant(member.getName())})) {
-                        ${table.getName()?lower_case}.set${member.getName()?cap_first}(${getCursorGetter(member.getType())});
+                <#assign retrieveSQLSelectResults><#list table.getColumns() as column>
+                    } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
+                        ${table.getName()?lower_case}.set${column.getName()?cap_first}(${getCursorGetter(column.getType())});
                     </#list>
                     }</#assign>
                     ${retrieveSQLSelectResults?remove_beginning("                    } else ")}
@@ -147,8 +147,8 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
             ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 
             ContentValues contentValues = new ContentValues();
-            <#list table.getMembers() as member>
-            contentValues.put(${formatConstant(member.getName())}, ${table.getName()?lower_case}.get${member.getName()?cap_first}());
+            <#list table.getColumns() as column>
+            contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.get${column.getName()?cap_first}());
             </#list>
 
             return contentValues;

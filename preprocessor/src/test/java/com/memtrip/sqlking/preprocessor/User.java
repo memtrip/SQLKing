@@ -1,14 +1,14 @@
 package com.memtrip.sqlking.preprocessor;
 
-import com.memtrip.sqlking.common.Member;
+import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
 @Table
 public class User implements Model {
-    @Member private String username;
-    @Member private long timestamp;
-    @Member private boolean isRegistered;
-    @Member private byte[] profilePicture;
+    @Column private String username;
+    @Column private long timestamp;
+    @Column private boolean isRegistered;
+    @Column private byte[] profilePicture;
 
     public String getUsername() {
         return username;

@@ -1,8 +1,8 @@
 package com.memtrip.sqlking.preprocessor.processor.validation;
 
+import com.memtrip.sqlking.preprocessor.processor.model.Column;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.model.ForeignKey;
-import com.memtrip.sqlking.preprocessor.processor.model.Member;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 
 import java.util.List;
@@ -14,22 +14,22 @@ public class ForeignKeyColumnMustBeMemberOfAnnotatedVariableType implements Vali
         mData = data;
     }
 
-    private Member getTableMemberWithInvalidForeignKey(List<Table> tables) {
-        Member member = null;
+    private Column getTableMemberWithInvalidForeignKey(List<Table> tables) {
+        Column column = null;
 
         for (Table table : tables) {
-            member = getMemberWithInvalidForeignKey(table.getMembers());
+            column = getMemberWithInvalidForeignKey(table.getColumns());
         }
 
-        return member;
+        return column;
     }
 
-    private Member getMemberWithInvalidForeignKey(List<Member> members) {
+    private Column getMemberWithInvalidForeignKey(List<Column> columns) {
 
-        for (Member member : members) {
-            if (member.getForeignKey() != null) {
-                if (!foreignKeyColumnExistsForAnnotatedType(member)) {
-                    return member;
+        for (Column column : columns) {
+            if (column.getForeignKey() != null) {
+                if (!foreignKeyColumnExistsForAnnotatedType(column)) {
+                    return column;
                 }
             }
         }
@@ -37,7 +37,7 @@ public class ForeignKeyColumnMustBeMemberOfAnnotatedVariableType implements Vali
         return null;
     }
 
-    private boolean foreignKeyColumnExistsForAnnotatedType(Member member) {
+    private boolean foreignKeyColumnExistsForAnnotatedType(Column member) {
         String column = member.getForeignKey().getColumn();
         String type = getForeignKeyType(member.getForeignKey());
         Table table = getTableByName(mData.getTables(), type);
@@ -61,8 +61,8 @@ public class ForeignKeyColumnMustBeMemberOfAnnotatedVariableType implements Vali
     }
 
     private boolean columnExistsInTable(String column, Table table) {
-        List<Member> members = table.getMembers();
-        for (Member member : members) {
+        List<Column> columns = table.getColumns();
+        for (Column member : columns) {
             if (member.getName().equals(column) || column.equals("_id")) {
                 return true;
             }
@@ -73,9 +73,9 @@ public class ForeignKeyColumnMustBeMemberOfAnnotatedVariableType implements Vali
 
     @Override
     public void validate() throws ValidatorException {
-        Member member = getTableMemberWithInvalidForeignKey(mData.getTables());
-        if (member != null) {
-            throw new ValidatorException(member.getElement(), "[@Member foreign_key value must be either `_id` or a member variable of the annotated property]");
+        Column column = getTableMemberWithInvalidForeignKey(mData.getTables());
+        if (column != null) {
+            throw new ValidatorException(column.getElement(), "[@Column foreign_key value must be either `_id` or a column variable of the annotated property]");
         }
     }
 }

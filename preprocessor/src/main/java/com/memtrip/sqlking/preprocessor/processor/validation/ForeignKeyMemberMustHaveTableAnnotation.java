@@ -1,8 +1,8 @@
 package com.memtrip.sqlking.preprocessor.processor.validation;
 
+import com.memtrip.sqlking.preprocessor.processor.model.Column;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.model.ForeignKey;
-import com.memtrip.sqlking.preprocessor.processor.model.Member;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 
 import java.util.List;
@@ -14,23 +14,23 @@ public class ForeignKeyMemberMustHaveTableAnnotation implements Validator {
         mData = data;
     }
 
-    private Member getTableMemberWithInvalidForeignKey(List<Table> tables) {
-        Member member = null;
+    private Column getTableMemberWithInvalidForeignKey(List<Table> tables) {
+        Column column = null;
 
         for (Table table : tables) {
-            member = getMemberWithInvalidForeignKey(table.getMembers());
+            column = getMemberWithInvalidForeignKey(table.getColumns());
         }
 
-        return member;
+        return column;
     }
 
-    private Member getMemberWithInvalidForeignKey(List<Member> members) {
+    private Column getMemberWithInvalidForeignKey(List<Column> columns) {
 
-        for (Member member : members) {
-            if (member.getForeignKey() != null) {
-                ForeignKey foreignKey = member.getForeignKey();
+        for (Column column : columns) {
+            if (column.getForeignKey() != null) {
+                ForeignKey foreignKey = column.getForeignKey();
                 if (!foreignKeyIsAnnotatingTable(foreignKey, mData.getTables())) {
-                    return member;
+                    return column;
                 }
             }
         }
@@ -57,9 +57,9 @@ public class ForeignKeyMemberMustHaveTableAnnotation implements Validator {
 
     @Override
     public void validate() throws ValidatorException {
-        Member member = getTableMemberWithInvalidForeignKey(mData.getTables());
-        if (member != null) {
-            throw new ValidatorException(member.getElement(), "[A @Member with a foreign_key can only annotate a variable whose data type is annotated with @Table]");
+        Column column = getTableMemberWithInvalidForeignKey(mData.getTables());
+        if (column != null) {
+            throw new ValidatorException(column.getElement(), "[A @Column with a foreign_key can only annotate a variable whose data type is annotated with @Table]");
         }
     }
 }

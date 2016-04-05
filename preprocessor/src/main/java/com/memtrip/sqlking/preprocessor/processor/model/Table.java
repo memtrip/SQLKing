@@ -12,7 +12,7 @@ public class Table {
     private Element mElement;
     private String mName;
     private String mPackage;
-    private List<Member> mMembers;
+    private List<Column> mColumns;
 
     public Element getElement() {
         return mElement;
@@ -26,15 +26,15 @@ public class Table {
         return mPackage;
     }
 
-    public List<Member> getMembers() {
-        return mMembers;
+    public List<Column> getColumns() {
+        return mColumns;
     }
 
     public Table(Element element) {
         mElement = element;
         mName = assembleName(element);
         mPackage = assemblePackage(element);
-        mMembers = assembleMembers(element);
+        mColumns = assembleMembers(element);
     }
 
     private String assembleName(Element element) {
@@ -48,17 +48,17 @@ public class Table {
         return name.toString();
     }
 
-    private List<Member> assembleMembers(Element element) {
-        List<Member> members = new ArrayList<>();
+    private List<Column> assembleMembers(Element element) {
+        List<Column> columns = new ArrayList<>();
 
         if (element.getEnclosedElements() != null && element.getEnclosedElements().size() > 0) {
             for (Element childElement : element.getEnclosedElements()) {
                 if (childElement.getKind().isField()) {
-                    members.add(new Member(childElement));
+                    columns.add(new Column(childElement));
                 }
             }
         }
 
-        return members;
+        return columns;
     }
 }

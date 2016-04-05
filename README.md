@@ -12,17 +12,17 @@ dependencies {
 ```
 
 ####Define your models###
-SQL tables are defined by POJOs that are annotated with `@Table`. Table columns are annotated with `@Member`
+SQL tables are defined by POJOs that are annotated with `@Table`. Table columns are annotated with `@Column`
 and must have matching getter / setter methods i.e; `private String name;` must be accompanied by both a
 `String getName()` and a `setName(String newVal)` method.
 
 ```java
 @Table
 public class User {
-    @Member private String username;
-    @Member private long timestamp;
-    @Member private boolean isRegistered;
-    @Member private byte[] profilePicture;
+    @Column private String username;
+    @Column private long timestamp;
+    @Column private boolean isRegistered;
+    @Column private byte[] profilePicture;
 
     public String getUsername() {
         return username;
@@ -229,7 +229,6 @@ The `tests/java/com/memtrip/sqlking` package contains a full set of unit and int
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####
-- Rename the @Member annotation to @Column
 - Add the Random() method to OrderBy
-- Execute CREATE INDEX queries for @Member annotations that use an index
-- Implement the @Member annotation foreign_key functionality
+- Execute CREATE INDEX queries for @Column annotations that use an index
+- Implement the @Column annotation foreign_key functionality

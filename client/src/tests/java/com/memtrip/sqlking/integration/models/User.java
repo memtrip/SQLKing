@@ -15,7 +15,7 @@
  */
 package com.memtrip.sqlking.integration.models;
 
-import com.memtrip.sqlking.common.Member;
+import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
 /**
@@ -23,12 +23,12 @@ import com.memtrip.sqlking.common.Table;
  */
 @Table
 public class User {
-    @Member private String username;
-    @Member private long timestamp;
-    @Member private boolean isRegistered;
-    @Member private byte[] profilePicture;
-    @Member private double rating;
-    @Member private int count;
+    @Column private String username;
+    @Column private long timestamp;
+    @Column private boolean isRegistered;
+    @Column private byte[] profilePicture;
+    @Column private double rating;
+    @Column private int count;
 
     public String getUsername() {
         return username;

@@ -1,6 +1,6 @@
 package com.memtrip.sqlking.preprocessor.processor.templates.method;
 
-import com.memtrip.sqlking.preprocessor.processor.model.Member;
+import com.memtrip.sqlking.preprocessor.processor.model.Column;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.*;
@@ -41,14 +41,14 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         statementBuilder.append(table.getName());
         statementBuilder.append(" (");
 
-        for (int i = 0; i < table.getMembers().size(); i++) {
-            Member member = table.getMembers().get(i);
-            statementBuilder.append(member.getName());
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            Column column = table.getColumns().get(i);
+            statementBuilder.append(column.getName());
             statementBuilder.append(" ");
-            statementBuilder.append(getSQLDataTypeFromClassRef(member.getType()));
+            statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
 
             // do not display the comma on the last column entry
-            if (i != table.getMembers().size()-1)
+            if (i != table.getColumns().size()-1)
                 statementBuilder.append(",");
         }
 

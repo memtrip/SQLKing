@@ -1,6 +1,6 @@
 package com.memtrip.sqlking.preprocessor.processor;
 
-import com.memtrip.sqlking.common.Member;
+import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.preprocessor.processor.generation.FreeMarker;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
@@ -74,7 +74,7 @@ public class Processor extends AbstractProcessor {
 	public Set<String> getSupportedAnnotationTypes() {
 		Set<String> set = new HashSet<>();
 		set.add(Table.class.getCanonicalName());
-		set.add(Member.class.getCanonicalName());
+		set.add(Column.class.getCanonicalName());
 		return set;
 	}
 
