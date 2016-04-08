@@ -4,10 +4,12 @@ SQLKing
 SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
 annotations and CRUD classes expose an expressive api for executing SQLite queries.
 ####Gradle dependencies####
+*NOTE: See https://bitbucket.org/hvisser/android-apt if you are not familiar with using annotation
+preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:sqlking-preprocessor:1.0'
-    compile 'com.memtrip.sqlking:sqlking-client:1.0'
+    apt 'com.memtrip.sqlking:preprocessor:1.0'
+    compile 'com.memtrip.sqlking:client:1.0'
 }
 ```
 
@@ -229,6 +231,6 @@ The `tests/java/com/memtrip/sqlking` package contains a full set of unit and int
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####
-- Add the Random() method to OrderBy
 - Execute CREATE INDEX queries for @Column annotations that use an index
 - Implement the @Column annotation foreign_key functionality
+- Auto generate the getter / setters of classes annotated with @Table

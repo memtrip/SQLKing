@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.memtrip.sqlking</groupId>
-    <artifactId>sqlking-common</artifactId>
+    <artifactId>common</artifactId>
     <version>1.0</version>
 
     <dependencies>
@@ -16,5 +16,13 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>Bintray</id>
+            <url>https://api.bintray.com/maven/memtrip/maven/sqlking-common/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
 
 </project>

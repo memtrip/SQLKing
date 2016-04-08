@@ -7,13 +7,13 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 ext {
-    bintrayRepo = 'memtrip '
-    bintrayName = 'com.memtrip.sqlking'
+    bintrayRepo = 'maven'
+    bintrayName = 'sqlking-client'
     bintrayOrg = 'memtrip'
 
     publishedGroupId = 'com.memtrip.sqlking'
-    libraryName = 'sqlking'
-    artifact = 'sqlking-client'
+    libraryName = 'client'
+    artifact = 'client'
 
     libraryDescription = 'SQLKing is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
 
@@ -88,13 +88,6 @@ bintray {
         licenses = allLicenses
         publish = true
         publicDownloadNumbers = true
-        version {
-            desc = libraryDescription
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
     }
 }
 
@@ -134,11 +127,11 @@ install {
 }
 
 dependencies {
-    compile 'com.memtrip.sqlking:sqlking-common:1.0'
+    compile 'com.memtrip.sqlking:common:1.0'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
 
-    androidTestApt 'com.memtrip.sqlking:sqlking-preprocessor:1.0'
+    androidTestApt 'com.memtrip.sqlking:preprocessor:1.0'
 
     androidTestCompile(
         'com.android.support.test:runner:0.3',

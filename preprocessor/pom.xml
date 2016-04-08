@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.memtrip.sqlking</groupId>
-    <artifactId>sqlking-preprocessor</artifactId>
+    <artifactId>preprocessor</artifactId>
     <version>1.0</version>
 
     <dependencies>
@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.memtrip.sqlking</groupId>
-            <artifactId>sqlking-common</artifactId>
+            <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
@@ -44,5 +44,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>Bintray</id>
+            <url>https://api.bintray.com/maven/memtrip/maven/sqlking-preprocessor/;publish=1</url>
+        </repository>
+    </distributionManagement>
 
 </project>
