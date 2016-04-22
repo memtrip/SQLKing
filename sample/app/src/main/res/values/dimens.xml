@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="comment">18dp</dimen>
+</resources>
