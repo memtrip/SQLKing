@@ -6,7 +6,30 @@
 
     <groupId>com.memtrip.sqlking</groupId>
     <artifactId>common</artifactId>
-    <version>1.0</version>
+    <version>1.0.4</version>
+
+    <name>SQLKing common</name>
+    <description>
+        SQLKing is an Android SQLite ORM powered an annotation preprocessor, tables are defined
+        by Model classes and CRUD classes expose an expressive api for SQLite executing queries.
+    </description>
+    <url>https://github.com/memtrip/SQLKing</url>
+
+    <developers>
+        <developer>
+            <name>Samuel Kirton</name>
+            <email>sam@memtrip.com</email>
+            <organization>memtrip</organization>
+            <organizationUrl>http://www.memtrip.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>
@@ -17,6 +40,43 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <distributionManagement>
         <repository>
             <id>Bintray</id>
@@ -24,5 +84,10 @@
         </repository>
     </distributionManagement>
 
+    <scm>
+        <connection>scm:git:git@github.com:memtrip/SQLKing.git</connection>
+        <developerConnection>scm:git:git@github.com:memtrip/SQLKing.git</developerConnection>
+        <url>git@github.com:memtrip/SQLKing.git</url>
+    </scm>
 
 </project>
