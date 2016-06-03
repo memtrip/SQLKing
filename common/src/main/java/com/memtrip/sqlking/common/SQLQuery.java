@@ -6,6 +6,8 @@ import android.content.ContentValues;
 public interface SQLQuery {
     String getTableName();
     String getTableInsertQuery();
+    String[] getIndexNames();
+    String getCreateIndexQuery();
     String[] buildUnionInsertQuery(Object[] models);
     String[] getColumnNames();
     ContentValues getContentValues(Object model);

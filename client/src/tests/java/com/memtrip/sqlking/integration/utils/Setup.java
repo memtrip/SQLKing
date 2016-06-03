@@ -31,7 +31,7 @@ public class Setup {
     private SQLProvider mSQLProvider;
 
     public static final String DATABASE_NAME = "SQLKingTest";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public SQLProvider getSQLProvider() {
         return mSQLProvider;

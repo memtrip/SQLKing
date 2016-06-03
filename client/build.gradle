@@ -19,7 +19,7 @@ ext {
     siteUrl = 'https://github.com/memtrip/SQLKing'
     gitUrl = 'https://github.com/memtrip/SQLKing.git'
 
-    libraryVersion = '1.0.5'
+    libraryVersion = '1.0.6'
 
     developerId = 'samkirton'
     developerName = 'Samuel Kirton'
@@ -44,7 +44,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 23
         versionCode 6
-        versionName "1.0.5"
+        versionName "1.0.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -60,22 +60,22 @@ android {
         androidTest.java.srcDirs = ['src/tests/java']
     }
 
-    signingConfigs {
-        config{
-            storeFile file(properties.getProperty("keystore.storeFile"))
-            storePassword properties.getProperty("keystore.storePassword")
-            keyAlias properties.getProperty("keystore.keyAlias")
-            keyPassword properties.getProperty("keystore.keyPassword")
-        }
-    }
+//    signingConfigs {
+//        config{
+//            storeFile file(properties.getProperty("keystore.storeFile"))
+//            storePassword properties.getProperty("keystore.storePassword")
+//            keyAlias properties.getProperty("keystore.keyAlias")
+//            keyPassword properties.getProperty("keystore.keyPassword")
+//        }
+//    }
 
-    buildTypes {
-        release {
-            signingConfig  signingConfigs.config
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+//    buildTypes {
+//        release {
+//            signingConfig  signingConfigs.config
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//    }
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -137,11 +137,11 @@ install {
 }
 
 dependencies {
-    compile 'com.memtrip.sqlking:common:1.0.4'
+    compile 'com.memtrip.sqlking:common:1.0.6'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
 
-    androidTestApt 'com.memtrip.sqlking:preprocessor:1.0.4'
+    androidTestApt 'com.memtrip.sqlking:preprocessor:1.0.6'
 
     androidTestCompile(
         'com.android.support.test:runner:0.3',

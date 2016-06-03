@@ -71,6 +71,10 @@ public abstract class Query {
         );
     }
 
+    protected static Cursor rawQuery(String query, SQLProvider database) {
+        return database.rawQuery(query);
+    }
+
     protected static <T> Observable<T> wrapRx(final Callable<T> func) {
         return Observable.create(
                 new Observable.OnSubscribe<T>() {

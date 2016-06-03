@@ -19,6 +19,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
@@ -26,24 +28,41 @@ public class SQLOpen extends SQLiteOpenHelper {
 	private SQLiteDatabase mDatabase;
 	private String[] mSchemaArray;
 	private String[] mTableNameArray;
+    private String[] mCreateIndexQuery;
+    private List<String> mIndexNames;
 	
 	protected SQLiteDatabase getDatabase() {
 	    return mDatabase;
 	}
 	
-	protected SQLOpen(String name, int version, String[] schemaArray, String[] tableNameArray, Context context) {
+	protected SQLOpen(String name, int version, String[] schemaArray,
+					  String[] tableNameArray,
+					  String[] indexQuery,
+					  List<String> indexNames,
+					  Context context) {
+
 		super(context, name, null, version);
+
 		mSchemaArray = schemaArray;
 		mTableNameArray = tableNameArray;
+        mCreateIndexQuery = indexQuery;
+        mIndexNames = indexNames;
 		mDatabase = getWritableDatabase();
 	}
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+
 		for (String schema : mSchemaArray) {
 			db.execSQL(schema);
 		}
-	}
+
+        for (String createIndex : mCreateIndexQuery) {
+            if (createIndex != null) {
+                db.execSQL(createIndex);
+            }
+        }
+    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -60,5 +79,9 @@ public class SQLOpen extends SQLiteOpenHelper {
 		for (String tableName : mTableNameArray) {
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		}
+
+        for (String index : mIndexNames) {
+            db.execSQL("DROP INDEX IF EXISTS " + index);
+        }
 	}
 }

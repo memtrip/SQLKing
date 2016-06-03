@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.0'
-    compile 'com.memtrip.sqlking:client:1.0'
+    apt 'com.memtrip.sqlking:preprocessor:1.0.6'
+    compile 'com.memtrip.sqlking:client:1.0.6'
 
     compile 'joda-time:joda-time:2.9.3'
     compile 'com.jakewharton:butterknife:7.0.1'

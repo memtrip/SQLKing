@@ -6,7 +6,7 @@
 
     <groupId>com.memtrip.sqlking</groupId>
     <artifactId>common</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.6</version>
 
     <name>SQLKing common</name>
     <description>

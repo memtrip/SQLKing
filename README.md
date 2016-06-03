@@ -8,8 +8,8 @@ annotations and CRUD classes expose an expressive api for executing SQLite queri
 preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.0.4'
-    compile 'com.memtrip.sqlking:client:1.0.5'
+    apt 'com.memtrip.sqlking:preprocessor:1.0.6'
+    compile 'com.memtrip.sqlking:client:1.0.6'
 }
 ```
 
@@ -231,6 +231,5 @@ The `tests/java/com/memtrip/sqlking` package contains a full set of unit and int
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####
-- Execute CREATE INDEX queries for @Column annotations that use an index
 - Implement the @Column annotation foreign_key functionality
-- Auto generate the getter / setters of classes annotated with @Table
+- Implement a @NotNull annotation and handle this validation in the software layer

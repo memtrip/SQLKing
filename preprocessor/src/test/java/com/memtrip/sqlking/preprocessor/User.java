@@ -5,7 +5,7 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class User  {
-    @Column private String username;
+    @Column(index = true) private String username;
     @Column private long timestamp;
     @Column private boolean isRegistered;
     @Column private byte[] profilePicture;

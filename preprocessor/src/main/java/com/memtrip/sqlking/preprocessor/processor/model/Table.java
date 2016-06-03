@@ -53,7 +53,7 @@ public class Table {
 
         if (element.getEnclosedElements() != null && element.getEnclosedElements().size() > 0) {
             for (Element childElement : element.getEnclosedElements()) {
-                if (childElement.getKind().isField() && childElement.getAnnotation(Column.class) != null) {
+                if (childElement.getKind().isField() && childElement.getAnnotation(com.memtrip.sqlking.common.Column.class) != null) {
                     columns.add(new Column(childElement));
                 }
             }

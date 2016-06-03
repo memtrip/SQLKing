@@ -23,7 +23,7 @@ import com.memtrip.sqlking.common.Table;
  */
 @Table
 public class Post {
-    @Column private String id;
+    @Column(index = true) private String id;
     @Column private String title;
     @Column private byte[] blob;
     @Column private long timestamp;

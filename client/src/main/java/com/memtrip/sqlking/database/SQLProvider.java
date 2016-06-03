@@ -94,4 +94,8 @@ public class SQLProvider {
                 mClauseHelper.getClauseArgs(clause)
         );
     }
+
+    protected Cursor rawQuery(String sql) {
+        return mDatabase.rawQuery(sql, null);
+    }
 }

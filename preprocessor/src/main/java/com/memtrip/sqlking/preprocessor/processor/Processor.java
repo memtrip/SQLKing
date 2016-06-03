@@ -1,5 +1,7 @@
 package com.memtrip.sqlking.preprocessor.processor;
 
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.preprocessor.processor.generation.FreeMarker;
@@ -35,6 +37,7 @@ public class Processor extends AbstractProcessor {
 
         if (elements != null && elements.size() > 0) {
             final String GENERATED_FILE_PACKAGE = "com.memtrip.sqlking.gen";
+            final String GENERATED_FILE_PATH = "Q.java";
             final String GENERATED_FILE_NAME = "Q";
 
             Data data = new Data(elements);
@@ -52,9 +55,9 @@ public class Processor extends AbstractProcessor {
             }
 
             try {
-                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_NAME, DataModel.create(data));
+                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(data));
                 createFile(GENERATED_FILE_PACKAGE, GENERATED_FILE_NAME, body);
-            } catch (IOException e) {
+            } catch (IOException | FormatterException e) {
                 Context.getInstance().getMessager().printMessage(
                         Diagnostic.Kind.ERROR,
                         e.getMessage()
@@ -95,16 +98,18 @@ public class Processor extends AbstractProcessor {
         };
     }
 
-	private void createFile(String packageName, String name, String body) throws IOException {
+	private void createFile(String packageName, String name, String body) throws IOException, FormatterException {
         String nameWithPackage = packageName + "." + name;
         JavaFileObject jfo = Context.getInstance().getFiler().createSourceFile(nameWithPackage);
 
         Context.getInstance().getMessager().printMessage(
                 Diagnostic.Kind.NOTE,
-                "creating SQLKing Q source file at: " + jfo.toUri());
+                "creating SQLKing Q.java source file at: " + jfo.toUri());
+
+        String formattedSource = new Formatter().formatSource(body);
 
         Writer writer = jfo.openWriter();
-        writer.append(body);
+        writer.append(formattedSource);
         writer.close();
 	}
 
