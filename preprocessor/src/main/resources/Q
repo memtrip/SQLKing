@@ -15,8 +15,8 @@ public class Q {
         @Override
         public SQLQuery getSQLQuery(Class<?> classDef) {
             <#assign isAssignableFrom><#list tables as table>
-            } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()?cap_first}.class)) {
-                return new ${table.getName()?cap_first}();
+            } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()}.class)) {
+                return new ${table.getName()}();
             </#list>
             }</#assign>
 ${isAssignableFrom?remove_beginning("            } else ")} else {
@@ -27,8 +27,8 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
 <#list tables as table>
 <#assign getColumnNames><#list table.getColumns() as column>"${column.getName()}",</#list></#assign>
 <#assign unionInsertColumnNames><#list table.getColumns() as column>${column.getName()},</#list></#assign>
-<#assign packagedTableName>${table.getPackage()}.${table.getName()?cap_first}</#assign>
-    public static class ${table.getName()?cap_first} implements SQLQuery {
+<#assign packagedTableName>${table.getPackage()}.${table.getName()}</#assign>
+    public static class ${table.getName()} implements SQLQuery {
         <#list table.getColumns() as column>
         public static final String ${formatConstant(column.getName())} = "${column.getName()}";
         </#list>
@@ -72,7 +72,7 @@ ${isAssignableFrom?remove_beginning("            } else ")} else {
         private String buildInsertQuery(List<Object> models) {
             StringBuilder sb = new StringBuilder();
 
-            sb.append("INSERT INTO ${table.getName()?cap_first} ");
+            sb.append("INSERT INTO ${table.getName()} ");
 
             for (int i = 0; i < models.size(); i++) {
                 ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})models.get(i);

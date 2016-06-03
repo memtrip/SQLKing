@@ -41,8 +41,6 @@ public class Column {
         mType = assembleType(element);
         mIsIndex = assembleIsIndex(element);
         mForeignKey = assembleForeignKey(element);
-
-        System.out.print("");
     }
 
     private String assembleName(Element element) {
@@ -57,7 +55,7 @@ public class Column {
 
     private boolean assembleIsIndex(Element element) {
         com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
-        return column.index();
+        return (column != null) && column.index();
     }
 
     private ForeignKey assembleForeignKey(Element element) {

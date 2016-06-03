@@ -52,8 +52,8 @@ public class Processor extends AbstractProcessor {
             }
 
             try {
-                String q = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_NAME, DataModel.create(data));
-                createFile(GENERATED_FILE_PACKAGE, GENERATED_FILE_NAME, q);
+                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_NAME, DataModel.create(data));
+                createFile(GENERATED_FILE_PACKAGE, GENERATED_FILE_NAME, body);
             } catch (IOException e) {
                 Context.getInstance().getMessager().printMessage(
                         Diagnostic.Kind.ERROR,

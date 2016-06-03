@@ -4,7 +4,7 @@ import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
 @Table
-public class Post implements Model {
+public class Post {
     @Column private String id;
     @Column private String title;
     @Column private byte[] blob;

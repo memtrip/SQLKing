@@ -4,7 +4,7 @@ import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
 @Table
-public class User implements Model {
+public class User  {
     @Column private String username;
     @Column private long timestamp;
     @Column private boolean isRegistered;
