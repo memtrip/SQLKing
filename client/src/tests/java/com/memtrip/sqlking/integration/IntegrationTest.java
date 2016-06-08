@@ -21,6 +21,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.integration.utils.Setup;
+import com.memtrip.sqlking.integration.utils.SetupLog;
+import com.memtrip.sqlking.integration.utils.SetupPost;
 import com.memtrip.sqlking.integration.utils.SetupUser;
 
 import org.junit.Before;
@@ -31,6 +33,8 @@ import org.junit.Before;
 public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<Activity> {
     private Setup mSetup;
     private SetupUser mSetupUser;
+    private SetupPost mSetupPost;
+    private SetupLog mSetupLog;
 
     protected SQLProvider getSQLProvider() {
         return mSetup.getSQLProvider();
@@ -40,12 +44,23 @@ public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<A
         return mSetupUser;
     }
 
+    protected SetupPost getSetupPost() {
+        return mSetupPost;
+    }
+
+    protected SetupLog getSetupLog() {
+        return mSetupLog;
+    }
+
     @Before
     public void setUp() {
         getInstrumentation().getTargetContext().deleteDatabase(Setup.DATABASE_NAME);
 
-        mSetup = new Setup(getInstrumentation().getTargetContext());
         mSetupUser = new SetupUser();
+        mSetupPost = new SetupPost();
+        mSetupLog = new SetupLog();
+
+        mSetup = new Setup(getInstrumentation().getTargetContext());
         mSetup.setUp();
     }
 

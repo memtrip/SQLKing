@@ -18,11 +18,11 @@ public class FormatConstantMethod implements TemplateMethodModelEx {
         return map;
     }
 
-    protected FormatConstantMethod() {
+    private FormatConstantMethod() {
 
     }
 
-    private String formatConstant(String value) {
+    private static String formatConstant(String value) {
         StringBuilder sb = new StringBuilder();
 
         char[] items = value.toCharArray();

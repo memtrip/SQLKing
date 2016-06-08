@@ -1,6 +1,9 @@
 package com.memtrip.sqlking.preprocessor.processor.generation;
 
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 import java.io.IOException;
 import java.io.StringWriter;

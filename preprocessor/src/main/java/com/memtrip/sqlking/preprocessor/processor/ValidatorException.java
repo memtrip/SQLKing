@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.preprocessor.processor.validation;
+package com.memtrip.sqlking.preprocessor.processor;
 
 import javax.lang.model.element.Element;
 

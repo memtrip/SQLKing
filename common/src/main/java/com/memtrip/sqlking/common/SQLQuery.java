@@ -1,7 +1,7 @@
 package com.memtrip.sqlking.common;
 
-import android.database.Cursor;
 import android.content.ContentValues;
+import android.database.Cursor;
 
 public interface SQLQuery {
     String getTableName();

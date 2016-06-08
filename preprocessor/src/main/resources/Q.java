@@ -31,12 +31,12 @@ public class Q {
     <#list tables as table>
 
         <#assign getColumnNames>
-            <#list table.getColumns() as column>
-                "${column.getName()}",
+            <#list table.getPrimitiveColumns(tables) as column>
+                "${table.getName()}.${column.getName()}",
             </#list>
         </#assign>
 
-        <#assign unionInsertColumnNames><#list table.getColumns() as column>${column.getName()},</#list></#assign>
+        <#assign unionInsertColumnNames><#list table.getPrimitiveColumns(tables) as column>${column.getName()},</#list></#assign>
 
         <#assign packagedTableName>
             ${table.getPackage()}.${table.getName()}
@@ -55,13 +55,13 @@ public class Q {
 
             @Override
             public String getTableInsertQuery() {
-                return ${assembleCreateTable(table)}
+                return ${assembleCreateTable(table, tables)}
             }
 
             @Override
             public String[] getIndexNames() {
                 return new String[]{
-                <#list table.getColumns()as column>
+                <#list table.getPrimitiveColumns(tables) as column>
                     <#if column.isIndex()>
                         "${table.getName()}_${column.getName()}_index",
                     </#if>
@@ -73,7 +73,7 @@ public class Q {
             public String getCreateIndexQuery() {
                 StringBuilder sb = new StringBuilder();
 
-                <#list table.getColumns() as column>
+                <#list table.getPrimitiveColumns(tables) as column>
                     <#if column.isIndex()>
                         sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getName()} (${column.getName()});");
                     </#if>
@@ -120,7 +120,7 @@ public class Q {
                         sb.append("(${unionInsertColumnNames?remove_ending(",")}) ");
                         sb.append("SELECT ");
 
-                        <#list table.getColumns() as column>
+                        <#list table.getPrimitiveColumns(tables) as column>
                             <#assign getter>
                                 ${table.getName()?lower_case}.get${column.getName()?cap_first}()
                             </#assign>
@@ -132,7 +132,7 @@ public class Q {
                     } else {
                         sb.append(" UNION ALL SELECT ");
 
-                        <#list table.getColumns() as column>
+                        <#list table.getPrimitiveColumns(tables) as column>
                             <#assign getter>
                                 ${table.getName()?lower_case}.get${column.getName()?cap_first}()
                             </#assign>
@@ -167,11 +167,21 @@ public class Q {
                 for (int i = 0; !cursor.isAfterLast(); i++) {
                     ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
 
+                    <#list table.getColumns() as column>
+                        <#if column.isJoinable(tables)>
+                            ${joinReferences(table.getName(),tables)}
+                        </#if>
+                    </#list>
+
                     for (int x = 0; x < cursor.getColumnCount(); x++) {
                         <#assign retrieveSQLSelectResults>
                             <#list table.getColumns() as column>
-                                } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
-                                    ${table.getName()?lower_case}.set${column.getName()?cap_first}(${getCursorGetter(column.getType())});
+                                <#if column.isJoinable(tables)>
+                                    ${join(column.getClassName(),tables)}
+                                <#else>
+                                    } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
+                                        ${table.getName()?lower_case}.set${column.getName()?cap_first}(${getCursorGetter(column.getType())});
+                                </#if>
                             </#list>
                             }
                         </#assign>
@@ -199,7 +209,7 @@ public class Q {
 
                 ContentValues contentValues = new ContentValues();
 
-                <#list table.getColumns() as column>
+                <#list table.getPrimitiveColumns(tables) as column>
                     contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.get${column.getName()?cap_first}());
                 </#list>
 

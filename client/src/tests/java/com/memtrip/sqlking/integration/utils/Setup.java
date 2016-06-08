@@ -17,9 +17,10 @@ package com.memtrip.sqlking.integration.utils;
 
 import android.content.Context;
 
-import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.database.SQLInit;
+import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.gen.Q;
+import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.integration.models.Post;
 import com.memtrip.sqlking.integration.models.User;
 
@@ -31,7 +32,7 @@ public class Setup {
     private SQLProvider mSQLProvider;
 
     public static final String DATABASE_NAME = "SQLKingTest";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public SQLProvider getSQLProvider() {
         return mSQLProvider;
@@ -48,7 +49,8 @@ public class Setup {
                 new Q.DefaultResolver(),
                 mContext,
                 User.class,
-                Post.class
+                Post.class,
+                Log.class
         );
     }
 }

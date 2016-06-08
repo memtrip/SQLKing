@@ -1,16 +1,19 @@
 package com.memtrip.sqlking.preprocessor.processor;
 
+import com.google.auto.service.AutoService;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
+import com.memtrip.sqlking.preprocessor.processor.column.MembersHaveGetterSettersValidator;
 import com.memtrip.sqlking.preprocessor.processor.generation.FreeMarker;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.templates.DataModel;
-import com.google.auto.service.AutoService;
 import com.memtrip.sqlking.preprocessor.processor.validation.*;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -91,10 +94,8 @@ public class Processor extends AbstractProcessor {
 
     private Validator[] getValidators(Data data) {
         return new Validator[]{
-                new MemberAnnotationsHaveGetterSetters(data),
-                new TableNamesMustBeUnique(data),
-                new ForeignKeyMemberMustHaveTableAnnotation(data),
-                new ForeignKeyColumnMustBeMemberOfAnnotatedVariableType(data)
+                new MembersHaveGetterSettersValidator(data),
+                new TableNamesMustBeUnique(data)
         };
     }
 

@@ -58,28 +58,26 @@ public class Insert extends Query {
 
         /**
          * Executes an Insert query
-         * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
          */
-        public void execute(Class<? extends Object> classDef, SQLProvider sqlProvider) {
+        public void execute(SQLProvider sqlProvider) {
             insert(
                     new Insert(mValues),
-                    classDef,
+                    mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
                     sqlProvider
             );
         }
 
         /**
          * Executes an Insert query
-         * @param classDef The class definition that the query should run on
          * @param sqlProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Void> rx(final Class<? extends Object> classDef, final SQLProvider sqlProvider) {
+        public Observable<Void> rx(final SQLProvider sqlProvider) {
             return wrapRx(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    execute(classDef, sqlProvider);
+                    execute(sqlProvider);
                     return null; // Void
                 }
             });

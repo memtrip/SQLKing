@@ -1,5 +1,6 @@
 package com.memtrip.sqlking.preprocessor.processor.templates.method;
 
+import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
@@ -18,27 +19,8 @@ public class GetCursorGetterMethod implements TemplateMethodModelEx {
         return map;
     }
 
-    protected GetCursorGetterMethod() {
+    private GetCursorGetterMethod() {
 
-    }
-
-    private String assembleTypeGetter(String value) {
-        switch (value) {
-            case "java.lang.String":
-                return "cursor.getString(x)";
-            case "long":
-                return "cursor.getLong(x)";
-            case "int":
-                return "cursor.getInt(x)";
-            case "boolean":
-                return "cursor.getInt(x) == 1 ? true : false";
-            case "double":
-                return "cursor.getDouble(x)";
-            case "byte[]":
-                return "cursor.getBlob(x)";
-            default:
-                return ""; // TODO: foreign key object
-        }
     }
 
     @Override
@@ -49,6 +31,6 @@ public class GetCursorGetterMethod implements TemplateMethodModelEx {
                 value.toString() :
                 String.valueOf(value);
 
-        return assembleTypeGetter(typeValue);
+        return StringUtils.assembleTypeGetter(typeValue);
     }
 }

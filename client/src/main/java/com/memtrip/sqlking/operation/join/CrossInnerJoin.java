@@ -13,36 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.memtrip.sqlking.operation.clause;
+package com.memtrip.sqlking.operation.join;
+
+import com.memtrip.sqlking.operation.clause.Clause;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class In <T> implements Clause {
-    private String mRow;
-    private T[] mValues;
+@SuppressWarnings("unchecked")
+public class CrossInnerJoin<J> extends Join {
 
-    public String getRow() {
-        return mRow;
+    public CrossInnerJoin(Class<J> table, Join join, Clause... clauses) {
+        super(table, join, clauses);
     }
 
-    public T[] getValues() {
-        return mValues;
+    public static CrossInnerJoin crossInnerJoin(Class<?> table, Clause... clauses) {
+        return new CrossInnerJoin(table, null, clauses);
     }
 
-    private In(String row, T... values) {
-        mRow = row;
-        mValues = values;
-    }
-
-    /**
-     * Specifies a SQLite IN operator
-     * @param row  The row to perform the operation on
-     * @param values The values of the in operator
-     * @return  In operator
-     */
-    @SuppressWarnings("unchecked")
-    public static In in(String row, Object... values) {
-        return new In(row, values);
+    public static CrossInnerJoin crossInnerJoin(Class<?> table, Join join, Clause... clauses) {
+        return new CrossInnerJoin(table, join, clauses);
     }
 }

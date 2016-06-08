@@ -1,34 +1,27 @@
-/**
- * Copyright 2013-present memtrip LTD.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.memtrip.sqlking.integration.models;
 
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 
-/**
- * @author Samuel Kirton [sam@memtrip.com]
- */
 @Table
-public class User {
-    @Column private String username;
-    @Column private long timestamp;
-    @Column private boolean isRegistered;
-    @Column private byte[] profilePicture;
-    @Column private double rating;
-    @Column private int count;
+public class User  {
+    @Column int id; // no index supplied for the @Test testNoUserIndexesAreCreated()
+    @Column String username;
+    @Column long timestamp;
+    @Column boolean isRegistered;
+    @Column byte[] profilePicture;
+    @Column double rating;
+    @Column int count;
+    @Column int logId;
+    @Column Log log;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -76,5 +69,21 @@ public class User {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getLogId() {
+        return logId;
+    }
+
+    public void setLogId(int logId) {
+        this.logId = logId;
+    }
+
+    public Log getLog() {
+        return log;
+    }
+
+    public void setLog(Log log) {
+        this.log = log;
     }
 }

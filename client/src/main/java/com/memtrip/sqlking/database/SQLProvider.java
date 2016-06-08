@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.memtrip.sqlking.common.Resolver;
 import com.memtrip.sqlking.operation.clause.Clause;
+import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
@@ -65,17 +66,38 @@ public class SQLProvider {
         );
     }
 
-    protected Cursor query(String tableName, String[] columns, Clause[] clause, String groupBy, String having, OrderBy orderBy, Limit limit) {
-        return mDatabase.query(
-                tableName,
-                columns,
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause),
-                groupBy,
-                having,
-                mClauseHelper.getOrderBy(orderBy),
-                mClauseHelper.getLimit(limit)
-        );
+    protected Cursor query(String tableName, String[] columns, Clause[] clause, Join[] joins,
+                           String groupBy, String having, OrderBy orderBy, Limit limit) {
+
+        if (joins != null && joins.length > 0) {
+            try {
+                String joinQuery = mClauseHelper.buildJoinQuery(
+                        columns,
+                        joins,
+                        tableName,
+                        clause,
+                        orderBy,
+                        limit,
+                        mResolver
+                );
+
+                return mDatabase.rawQuery(joinQuery, mClauseHelper.getClauseArgs(clause));
+            } catch (Exception e) {
+                System.out.print("");
+                return null;
+            }
+        } else {
+            return mDatabase.query(
+                    tableName,
+                    columns,
+                    mClauseHelper.getClause(clause),
+                    mClauseHelper.getClauseArgs(clause),
+                    groupBy,
+                    having,
+                    mClauseHelper.getOrderBy(orderBy),
+                    mClauseHelper.getLimit(limit)
+            );
+        }
     }
 
     protected int delete(String tableName, Clause[] clause) {

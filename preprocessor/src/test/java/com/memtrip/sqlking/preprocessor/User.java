@@ -5,10 +5,13 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class User  {
-    @Column(index = true) private String username;
-    @Column private long timestamp;
-    @Column private boolean isRegistered;
-    @Column private byte[] profilePicture;
+    @Column String username;
+    @Column long timestamp;
+    @Column boolean isRegistered;
+    @Column byte[] profilePicture;
+    @Column double rating;
+    @Column int count;
+    @Column Log log;
 
     public String getUsername() {
         return username;
@@ -40,5 +43,29 @@ public class User  {
 
     public void setProfilePicture(byte[] newVal) {
         profilePicture = newVal;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Log getLog() {
+        return log;
+    }
+
+    public void setLog(Log log) {
+        this.log = log;
     }
 }

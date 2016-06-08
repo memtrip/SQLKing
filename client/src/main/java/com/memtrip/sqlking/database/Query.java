@@ -16,31 +16,38 @@ import rx.Subscriber;
 
 public abstract class Query {
 
-    protected static void insert(Insert insert, Class<?> classDef, SQLProvider database) {
+    protected static void insert(Insert insert, Class<?> classDef, SQLProvider sqlProvider) {
         if (insert.getModels() != null && insert.getModels().length > 0) {
-            String[] unionInsert = getSQLQuery(classDef,database).buildUnionInsertQuery(insert.getModels());
-            database.insertMultiple(unionInsert);
+            String[] unionInsert = getSQLQuery(classDef,sqlProvider).buildUnionInsertQuery(insert.getModels());
+            sqlProvider.insertMultiple(unionInsert);
         }
     }
 
-    protected static <T> T[] select(Select select, Class<?> classDef, SQLProvider database) {
-        SQLQuery sqlQuery = getSQLQuery(classDef, database);
+    protected static Cursor selectCursor(Select select, Class<?> classDef, SQLProvider sqlProvider) {
 
-        Cursor cursor = database.query(
+        SQLQuery sqlQuery = getSQLQuery(classDef, sqlProvider);
+
+        return sqlProvider.query(
                 sqlQuery.getTableName(),
                 sqlQuery.getColumnNames(),
                 select.getClause(),
+                select.getJoin(),
                 null,
                 null,
                 select.getOrderBy(),
                 select.getLimit()
         );
-
-        return sqlQuery.retrieveSQLSelectResults(cursor);
     }
 
-    protected static <T> T selectSingle(Select select, Class<?> classDef, SQLProvider database) {
-        T[] results = select(select, classDef, database);
+    protected static <T> T[] select(Select select, Class<?> classDef, SQLProvider sqlProvider) {
+        Cursor cursor = selectCursor(select, classDef, sqlProvider);
+        return getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
+    }
+
+    protected static <T> T selectSingle(Select select, Class<?> classDef, SQLProvider sqlProvider) {
+        Cursor cursor = selectCursor(select, classDef, sqlProvider);
+
+        T[] results = getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
 
         if (results != null && results.length > 0) {
             return results[0];
@@ -49,30 +56,30 @@ public abstract class Query {
         }
     }
 
-    protected static int update(Update update, Class<?> classDef, SQLProvider database) {
-        return database.update(
-                getSQLQuery(classDef, database).getTableName(),
+    protected static int update(Update update, Class<?> classDef, SQLProvider sqlProvider) {
+        return sqlProvider.update(
+                getSQLQuery(classDef, sqlProvider).getTableName(),
                 update.getContentValues(),
                 update.getConditions()
         );
     }
 
-    protected static long count(Count count, Class<?> classDef, SQLProvider database) {
-        return database.count(
-                getSQLQuery(classDef, database).getTableName(),
+    protected static long count(Count count, Class<?> classDef, SQLProvider sqlProvider) {
+        return sqlProvider.count(
+                getSQLQuery(classDef, sqlProvider).getTableName(),
                 count.getClause()
         );
     }
 
-    protected static int delete(Delete delete, Class<?> classDef, SQLProvider database) {
-        return database.delete(
-                getSQLQuery(classDef, database).getTableName(),
+    protected static int delete(Delete delete, Class<?> classDef, SQLProvider sqlProvider) {
+        return sqlProvider.delete(
+                getSQLQuery(classDef, sqlProvider).getTableName(),
                 delete.getConditions()
         );
     }
 
-    protected static Cursor rawQuery(String query, SQLProvider database) {
-        return database.rawQuery(query);
+    protected static Cursor rawQuery(String query, SQLProvider sqlProvider) {
+        return sqlProvider.rawQuery(query);
     }
 
     protected static <T> Observable<T> wrapRx(final Callable<T> func) {
@@ -90,7 +97,7 @@ public abstract class Query {
         );
     }
 
-    private static SQLQuery getSQLQuery(Class<?> classDef, SQLProvider database) {
-        return database.getResolver().getSQLQuery(classDef);
+    private static SQLQuery getSQLQuery(Class<?> classDef, SQLProvider sqlProvider) {
+        return sqlProvider.getResolver().getSQLQuery(classDef);
     }
 }

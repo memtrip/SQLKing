@@ -1,10 +1,11 @@
-package com.memtrip.sqlking.preprocessor.processor.validation;
+package com.memtrip.sqlking.preprocessor.processor.column;
 
 import com.memtrip.sqlking.preprocessor.processor.Context;
-import com.memtrip.sqlking.preprocessor.processor.model.Column;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
+import com.memtrip.sqlking.preprocessor.processor.Validator;
+import com.memtrip.sqlking.preprocessor.processor.ValidatorException;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
@@ -14,10 +15,10 @@ import java.util.List;
 /**
  * Each @Column annotations must have an associated getter / setter
  */
-public class MemberAnnotationsHaveGetterSetters implements Validator {
+public class MembersHaveGetterSettersValidator implements Validator {
     private Data mData;
 
-    public MemberAnnotationsHaveGetterSetters(Data data) {
+    public MembersHaveGetterSettersValidator(Data data) {
         mData = data;
     }
 

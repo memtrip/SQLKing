@@ -13,36 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.memtrip.sqlking.operation.clause;
+package com.memtrip.sqlking.operation.join;
+
+import com.memtrip.sqlking.operation.clause.Clause;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class In <T> implements Clause {
-    private String mRow;
-    private T[] mValues;
+public abstract class Join<J> {
+    private Class<J> mTable;
+    private Join mJoin;
+    private Clause[] mClauses;
 
-    public String getRow() {
-        return mRow;
+    public Class<J> getTable() {
+        return mTable;
     }
 
-    public T[] getValues() {
-        return mValues;
+    public Join getJoin() {
+        return mJoin;
     }
 
-    private In(String row, T... values) {
-        mRow = row;
-        mValues = values;
+    public Clause[] getClauses() {
+        return mClauses;
     }
 
-    /**
-     * Specifies a SQLite IN operator
-     * @param row  The row to perform the operation on
-     * @param values The values of the in operator
-     * @return  In operator
-     */
-    @SuppressWarnings("unchecked")
-    public static In in(String row, Object... values) {
-        return new In(row, values);
+    public Join(Class<J> table, Join join, Clause... clauses) {
+        mTable = table;
+        mJoin = join;
+        mClauses = clauses;
     }
 }

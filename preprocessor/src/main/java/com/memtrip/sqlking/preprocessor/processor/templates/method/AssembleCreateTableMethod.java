@@ -1,9 +1,10 @@
 package com.memtrip.sqlking.preprocessor.processor.templates.method;
 
-import com.memtrip.sqlking.preprocessor.processor.model.Column;
+import com.memtrip.sqlking.preprocessor.processor.column.Column;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 import freemarker.ext.beans.StringModel;
-import freemarker.template.*;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         return map;
     }
 
-    protected AssembleCreateTableMethod() {
+    private AssembleCreateTableMethod() {
 
     }
 
@@ -34,7 +35,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
      * @param	table	The table that the statement will create
      * @return	A SQL statement that will create a table
      */
-    public String buildCreateTableStatement(Table table) {
+    private String buildCreateTableStatement(Table table, List<Table> tables) {
         StringBuilder statementBuilder = new StringBuilder();
 
         statementBuilder.append("CREATE TABLE ");
@@ -43,14 +44,23 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
 
         for (int i = 0; i < table.getColumns().size(); i++) {
             Column column = table.getColumns().get(i);
-            statementBuilder.append(column.getName());
-            statementBuilder.append(" ");
-            statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
 
-            // do not display the comma on the last column entry
-            if (i != table.getColumns().size()-1)
+            if (!column.isJoinable(tables)) {
+                statementBuilder.append(column.getName());
+                statementBuilder.append(" ");
+                statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
+
                 statementBuilder.append(",");
+            }
         }
+
+        for (Column column : table.getColumns()) {
+            if (column.hasForeignKey()) {
+                statementBuilder.append("FOREIGN KEY(" + column.getForeignKey().getThisColumn() + ") REFERENCES " + column.getForeignKey().getTable() + "(" + column.getForeignKey().getForeignColumn() + "),");
+            }
+        }
+
+        statementBuilder.deleteCharAt(statementBuilder.length()-1);
 
         statementBuilder.append(");");
 
@@ -84,12 +94,19 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
 
     @Override
     public Object exec(List arguments) throws TemplateModelException {
-        if (arguments.get(0) instanceof StringModel) {
-            StringModel stringModel = (StringModel)arguments.get(0);
-            Table table = (Table)stringModel.getAdaptedObject(Table.class);
-            return buildCreateTableStatement(table);
+        Object tableNameValue = arguments.get(0);
+        Object tablesValue = arguments.get(1);
+
+        Table table;
+        if (tableNameValue instanceof StringModel) {
+            StringModel stringModel = (StringModel)tableNameValue;
+            table = (Table)stringModel.getAdaptedObject(Table.class);
         } else {
             throw new IllegalStateException("The assembleCreateTable argument must be type of com.memtrip.sqlking.preprocessor.model.Table");
         }
+
+        List<Table> tables = TransformModelUtil.getTables(tablesValue);
+
+        return buildCreateTableStatement(table, tables);
     }
 }

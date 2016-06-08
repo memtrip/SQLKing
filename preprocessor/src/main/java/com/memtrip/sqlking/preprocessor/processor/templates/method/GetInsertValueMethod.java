@@ -19,7 +19,7 @@ public class GetInsertValueMethod implements TemplateMethodModelEx {
     }
 
 
-    protected GetInsertValueMethod() {
+    private GetInsertValueMethod() {
 
     }
 

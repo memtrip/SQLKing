@@ -43,7 +43,7 @@ public class RxTest extends IntegrationTest {
         user.setTimestamp(USER_TIMESTAMP);
 
         // exercise
-        Observable<Void> create = Insert.getBuilder().values(user).rx(User.class, getSQLProvider());
+        Observable<Void> create = Insert.getBuilder().values(user).rx(getSQLProvider());
         TestSubscriber<Void> sub = new TestSubscriber<>();
         create.subscribe(sub);
 

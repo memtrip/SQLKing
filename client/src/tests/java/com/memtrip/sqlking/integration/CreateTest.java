@@ -51,7 +51,7 @@ public class CreateTest  extends IntegrationTest {
         user.setTimestamp(USER_TIMESTAMP);
 
         // exercise
-        Insert.getBuilder().values(user).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(user).execute(getSQLProvider());
 
         // verify
         User responseUser = Select.getBuilder().executeOne(User.class, getSQLProvider());
@@ -64,12 +64,14 @@ public class CreateTest  extends IntegrationTest {
     @Test
     public void testMultipleInsert() {
         // setup
+        int ANGIE_ID = 1;
         String ANGIE_USERNAME = "angie";
         long ANGIE_TIMESTAMP = System.currentTimeMillis();
         boolean ANGIE_IS_REGISTERED = true;
         double ANGIE_RATING = 2.7;
         int ANGIE_COUNT = 1028;
 
+        int SAM_ID = 2;
         String SAM_USERNAME = "sam";
         long SAM_TIMESTAMP = System.currentTimeMillis() + 1000;
         boolean SAM_IS_REGISTERED = false;
@@ -78,24 +80,28 @@ public class CreateTest  extends IntegrationTest {
 
         User[] users = new User[] {
                 SetupUser.createUser(
+                        ANGIE_ID,
                         ANGIE_USERNAME,
                         ANGIE_TIMESTAMP,
                         ANGIE_IS_REGISTERED,
                         ANGIE_RATING,
-                        ANGIE_COUNT
+                        ANGIE_COUNT,
+                        0
                 ),
 
                 SetupUser.createUser(
+                        SAM_ID,
                         SAM_USERNAME,
                         SAM_TIMESTAMP,
                         SAM_IS_REGISTERED,
                         SAM_RATING,
-                        SAM_COUNT
+                        SAM_COUNT,
+                        0
                 ),
         };
 
         // exercise
-        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(users).execute(getSQLProvider());
 
         // verify
         User angieUser = Select.getBuilder()
@@ -122,6 +128,7 @@ public class CreateTest  extends IntegrationTest {
     @Test
     public void testMoreThan500RowInsert() {
         int COLUMN_COUNT = 1350;
+        int ANGIE_ID = 1;
         String ANGIE_USERNAME = "angie";
         long ANGIE_TIMESTAMP = System.currentTimeMillis();
         boolean ANGIE_IS_REGISTERED = true;
@@ -131,15 +138,17 @@ public class CreateTest  extends IntegrationTest {
         User[] users = new User[COLUMN_COUNT];
         for (int i = 0; i < COLUMN_COUNT; i++) {
             users[i] = SetupUser.createUser(
+                    ANGIE_ID,
                     ANGIE_USERNAME,
                     ANGIE_TIMESTAMP+i,
                     ANGIE_IS_REGISTERED,
                     ANGIE_RATING,
-                    ANGIE_COUNT
+                    ANGIE_COUNT,
+                    0
             );
         }
 
-        Insert.getBuilder().values(users).execute(User.class, getSQLProvider());
+        Insert.getBuilder().values(users).execute(getSQLProvider());
 
         User[] usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
 

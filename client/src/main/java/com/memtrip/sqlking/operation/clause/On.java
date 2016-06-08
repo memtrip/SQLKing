@@ -18,31 +18,25 @@ package com.memtrip.sqlking.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class In <T> implements Clause {
-    private String mRow;
-    private T[] mValues;
+public class On implements Clause {
+    private String mColumn1;
+    private String mColumn2;
 
-    public String getRow() {
-        return mRow;
+    public String getColumn1() {
+        return mColumn1;
     }
 
-    public T[] getValues() {
-        return mValues;
+    public String getColumn2() {
+        return mColumn2;
     }
 
-    private In(String row, T... values) {
-        mRow = row;
-        mValues = values;
+    public On(String column1, String column2) {
+        mColumn1 = column1;
+        mColumn2 = column2;
     }
 
-    /**
-     * Specifies a SQLite IN operator
-     * @param row  The row to perform the operation on
-     * @param values The values of the in operator
-     * @return  In operator
-     */
     @SuppressWarnings("unchecked")
-    public static In in(String row, Object... values) {
-        return new In(row, values);
+    public static On on(String column1, String column2) {
+        return new On(column1, column2);
     }
 }

@@ -11,3 +11,4 @@ gradle
 preprocessor/target
 common/target
 build
+*.keystore

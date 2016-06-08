@@ -5,10 +5,11 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Post {
-    @Column private String id;
-    @Column private String title;
-    @Column private byte[] blob;
-    @Column private long timestamp;
+    @Column(index = true) String id;
+    @Column String title;
+    @Column byte[] blob;
+    @Column long timestamp;
+    @Column User user;
 
     public String getId() {
         return id;
@@ -40,5 +41,13 @@ public class Post {
 
     public void setTimestamp(long newVal) {
         timestamp = newVal;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

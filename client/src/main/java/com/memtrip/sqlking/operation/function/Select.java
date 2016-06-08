@@ -18,6 +18,7 @@ package com.memtrip.sqlking.operation.function;
 import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
+import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
@@ -31,11 +32,16 @@ import rx.Observable;
  */
 public class Select extends Query {
     private Clause[] mClause;
+    private Join[] mJoin;
     private OrderBy mOrderBy;
     private Limit mLimit;
 
     public Clause[] getClause() {
         return mClause;
+    }
+
+    public Join[] getJoin() {
+        return mJoin;
     }
 
     public OrderBy getOrderBy() {
@@ -46,8 +52,9 @@ public class Select extends Query {
         return mLimit;
     }
 
-    private Select(Clause[] clause, OrderBy orderBy, Limit limit) {
+    private Select(Clause[] clause, Join[] join, OrderBy orderBy, Limit limit) {
         mClause = clause;
+        mJoin = join;
         mOrderBy = orderBy;
         mLimit = limit;
     }
@@ -58,6 +65,7 @@ public class Select extends Query {
 
     public static class Builder {
         private Clause[] mClause;
+        private Join[] mJoin;
         private OrderBy mOrderBy;
         private Limit mLimit;
 
@@ -70,6 +78,11 @@ public class Select extends Query {
          */
         public Builder where(Clause... clause) {
             mClause = clause;
+            return this;
+        }
+
+        public Builder join(Join... joins) {
+            mJoin = joins;
             return this;
         }
 
@@ -104,7 +117,7 @@ public class Select extends Query {
          */
         public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
             return select(
-                    new Select(mClause, mOrderBy, mLimit),
+                    new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
                     sqlProvider
             );
@@ -119,7 +132,7 @@ public class Select extends Query {
          */
         public <T> T executeOne(Class<T> classDef, SQLProvider sqlProvider) {
             return selectSingle(
-                    new Select(mClause, mOrderBy, mLimit),
+                    new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
                     sqlProvider
             );

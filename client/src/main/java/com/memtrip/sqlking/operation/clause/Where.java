@@ -68,6 +68,7 @@ public class Where<T> implements Clause {
      * @param value  The value being evaluated
      * @return Where clause
      */
+    @SuppressWarnings("unchecked")
     public static Where where(String row, Exp expression, Object value) {
         return new Where(row, expression, value);
     }

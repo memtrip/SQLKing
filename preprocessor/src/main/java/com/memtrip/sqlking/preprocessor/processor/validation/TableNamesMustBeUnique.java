@@ -1,5 +1,7 @@
 package com.memtrip.sqlking.preprocessor.processor.validation;
 
+import com.memtrip.sqlking.preprocessor.processor.Validator;
+import com.memtrip.sqlking.preprocessor.processor.ValidatorException;
 import com.memtrip.sqlking.preprocessor.processor.model.Data;
 import com.memtrip.sqlking.preprocessor.processor.model.Table;
 

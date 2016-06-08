@@ -15,15 +15,26 @@
  */
 package com.memtrip.sqlking.database;
 
+import com.memtrip.sqlking.common.Resolver;
+import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.operation.clause.And;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.clause.In;
+import com.memtrip.sqlking.operation.clause.On;
 import com.memtrip.sqlking.operation.clause.Or;
 import com.memtrip.sqlking.operation.clause.Where;
+import com.memtrip.sqlking.operation.join.CrossInnerJoin;
+import com.memtrip.sqlking.operation.join.InnerJoin;
+import com.memtrip.sqlking.operation.join.Join;
+import com.memtrip.sqlking.operation.join.LeftOuterJoin;
+import com.memtrip.sqlking.operation.join.NaturalInnerJoin;
+import com.memtrip.sqlking.operation.join.NaturalLeftOuterJoin;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,6 +71,8 @@ public class ClauseHelper {
             clauseBuilder.append(buildInCondition((In) clause));
         } else if (clause instanceof Where) {
             clauseBuilder.append(buildWhereCondition((Where) clause));
+        }else if (clause instanceof On) {
+            clauseBuilder.append(buildOnCondition((On) clause));
         } else if (clause instanceof And) {
             clauseBuilder.append(BRACKET_START);
             And and = (And)clause;
@@ -91,12 +104,12 @@ public class ClauseHelper {
         return clauseBuilder.toString();
     }
 
-    private String buildWhereCondition(Where condition) {
+    private String buildWhereCondition(Where where) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(condition.getRow());
+        stringBuilder.append(where.getRow());
         stringBuilder.append(SPACE);
-        stringBuilder.append(condition.getExpression().toString());
+        stringBuilder.append(where.getExpression().toString());
         stringBuilder.append(SPACE);
         stringBuilder.append(VALUE);
 
@@ -126,6 +139,20 @@ public class ClauseHelper {
         }
 
         stringBuilder.append(BRACKET_END);
+
+        return stringBuilder.toString();
+    }
+
+    private String buildOnCondition(On on) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("ON");
+        stringBuilder.append(SPACE);
+        stringBuilder.append(on.getColumn1());
+        stringBuilder.append(SPACE);
+        stringBuilder.append("=");
+        stringBuilder.append(SPACE);
+        stringBuilder.append(on.getColumn2());
 
         return stringBuilder.toString();
     }
@@ -212,5 +239,105 @@ public class ClauseHelper {
         }
 
         return stringBuilder.toString();
+    }
+
+    public String getJoinStatement(Join[] joins, Resolver resolver) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Join join : joins) {
+            SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
+            String tableName = sqlQuery.getTableName();
+
+            stringBuilder.append(getJoinType(join))
+                    .append(" ")
+                    .append(tableName)
+                    .append(" ")
+                    .append(getClause(join.getClauses()));
+
+            if (join.getJoin() != null) {
+                stringBuilder.append(" ")
+                        .append(getJoinStatement(new Join[] { join.getJoin() }, resolver));
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Clause[] clause,
+                                  OrderBy orderBy, Limit limit, Resolver resolver) {
+
+        String[] joinColumns = getJoinColumns(joins, resolver);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("SELECT ");
+
+        for (String column : tableColumns) {
+            stringBuilder.append(column).append(", ");
+        }
+
+        for (String column : joinColumns) {
+            String columnAlias = column.replace(".","_");
+            stringBuilder.append(column)
+                    .append(" as ")
+                    .append(columnAlias)
+                    .append(", ");
+        }
+
+        // remove the trailing comma
+        stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
+
+        String clauseString = getClause(clause);
+        if (clauseString != null && clauseString.length() > 0) {
+            clauseString = "WHERE " + clauseString;
+        }
+
+        stringBuilder.append(" FROM ")
+                .append(tableName)
+                .append(" ")
+                .append(getJoinStatement(joins, resolver))
+                .append(" ")
+                .append(clauseString)
+                .append(" ")
+                .append(getOrderBy(orderBy))
+                .append(" ")
+                .append(getLimit(limit));
+
+        return stringBuilder.toString();
+    }
+
+    private String[] getJoinColumns(Join[] joins, Resolver resolver) {
+        List<String> joinColumns = new ArrayList<>();
+
+        for (Join join : joins) {
+            SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
+            String[] columnNames = sqlQuery.getColumnNames();
+
+            Collections.addAll(joinColumns, columnNames);
+
+            if (join.getJoin() != null) {
+                String[] innerJoinColumns = getJoinColumns(new Join[] { join.getJoin() }, resolver);
+                Collections.addAll(joinColumns, innerJoinColumns);
+            }
+        }
+
+        String[] columns = new String[joinColumns.size()];
+        return joinColumns.toArray(columns);
+    }
+
+    private String getJoinType(Join join) {
+        if (join instanceof InnerJoin) {
+            return "INNER JOIN";
+        } else if (join instanceof CrossInnerJoin) {
+            return "CROSS INNER JOIN";
+        } else if (join instanceof LeftOuterJoin) {
+            return "LEFT OUTER JOIN";
+        } else if (join instanceof NaturalInnerJoin) {
+            return "NATURAL INNER JOIN";
+        } else if (join instanceof NaturalLeftOuterJoin) {
+            return "NATURAL LEFT OUTER JOIN";
+        }
+
+        return "INNER JOIN";
     }
 }
