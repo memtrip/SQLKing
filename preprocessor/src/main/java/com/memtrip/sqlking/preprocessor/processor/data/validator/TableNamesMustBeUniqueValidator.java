@@ -1,16 +1,16 @@
-package com.memtrip.sqlking.preprocessor.processor.validation;
+package com.memtrip.sqlking.preprocessor.processor.data.validator;
 
 import com.memtrip.sqlking.preprocessor.processor.Validator;
 import com.memtrip.sqlking.preprocessor.processor.ValidatorException;
-import com.memtrip.sqlking.preprocessor.processor.model.Data;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
 
 import java.util.List;
 
-public class TableNamesMustBeUnique implements Validator {
+public class TableNamesMustBeUniqueValidator implements Validator {
     private Data mData;
 
-    public TableNamesMustBeUnique(Data data) {
+    public TableNamesMustBeUniqueValidator(Data data) {
         mData = data;
     }
 

@@ -1,7 +1,7 @@
-package com.memtrip.sqlking.preprocessor.processor.templates.method;
+package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
-import com.memtrip.sqlking.preprocessor.processor.column.Column;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
@@ -68,7 +68,7 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                 joinTableNameValue.toString() :
                 String.valueOf(joinTableNameValue);
 
-        List<Table> tables = TransformModelUtil.getTables(tablesValue);
+        List<Table> tables = Util.getTables(tablesValue);
 
         String join = build(joinTableName, tables);
         if (join.length() > 0) {

@@ -19,7 +19,7 @@ ext {
     siteUrl = 'https://github.com/memtrip/SQLKing'
     gitUrl = 'https://github.com/memtrip/SQLKing.git'
 
-    libraryVersion = '1.0.7'
+    libraryVersion = '1.1'
 
     developerId = 'samkirton'
     developerName = 'Samuel Kirton'
@@ -43,8 +43,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 24
-        versionCode 6
-        versionName "1.0.7"
+        versionCode 7
+        versionName "1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -137,11 +137,11 @@ install {
 }
 
 dependencies {
-    compile 'com.memtrip.sqlking:common:1.0.9'
+    compile 'com.memtrip.sqlking:common:1.1'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
 
-    androidTestApt 'com.memtrip.sqlking:preprocessor:1.0.15'
+    androidTestApt 'com.memtrip.sqlking:preprocessor:1.0.17'
 
     androidTestCompile(
         'com.android.support.test:runner:0.3',

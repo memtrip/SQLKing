@@ -22,15 +22,15 @@ public class Context {
         return mElements;
     }
 
-    public Filer getFiler() {
+    Filer getFiler() {
         return mFiler;
     }
 
-    public Messager getMessager() {
+    Messager getMessager() {
         return mMessager;
     }
 
-    public static void createInstance(ProcessingEnvironment env) {
+    static void createInstance(ProcessingEnvironment env) {
         sInstance = new Context(env);
     }
 

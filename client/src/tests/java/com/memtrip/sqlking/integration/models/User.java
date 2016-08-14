@@ -1,9 +1,18 @@
 package com.memtrip.sqlking.integration.models;
 
 import com.memtrip.sqlking.common.Column;
+import com.memtrip.sqlking.common.ForeignKey;
 import com.memtrip.sqlking.common.Table;
 
-@Table
+@Table(
+        foreignKeys = {
+                @ForeignKey(
+                        targetTable = "Log",
+                        targetColumn = "id",
+                        localColumn = "logId"
+                )
+        }
+)
 public class User  {
     @Column int id; // no index supplied for the @Test testNoUserIndexesAreCreated()
     @Column String username;

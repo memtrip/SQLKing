@@ -5,12 +5,19 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Comment {
+    @Column(index = true) int id;
+    @Column String body;
+    @Column long timestamp;
+    @Column int userId;
+    @Column User user;
 
-    @Column
-    private String body;
+    public int getId() {
+        return id;
+    }
 
-    @Column
-    private long timestamp;
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getBody() {
         return body;
@@ -26,5 +33,21 @@ public class Comment {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

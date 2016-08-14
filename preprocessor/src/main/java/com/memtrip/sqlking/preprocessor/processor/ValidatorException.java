@@ -5,11 +5,11 @@ import javax.lang.model.element.Element;
 public class ValidatorException extends Exception {
     private Element mElement;
 
-    public Element getElement() {
+    Element getElement() {
         return mElement;
     }
 
-    public ValidatorException(String message) {
+    ValidatorException(String message) {
         super(message);
     }
 

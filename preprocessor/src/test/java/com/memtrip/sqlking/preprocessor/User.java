@@ -1,9 +1,18 @@
 package com.memtrip.sqlking.preprocessor;
 
 import com.memtrip.sqlking.common.Column;
+import com.memtrip.sqlking.common.ForeignKey;
 import com.memtrip.sqlking.common.Table;
 
-@Table
+@Table(
+        foreignKeys = {
+                @ForeignKey(
+                        targetTable = "Log",
+                        targetColumn = "id",
+                        localColumn = "logId"
+                )
+        }
+)
 public class User  {
     @Column String username;
     @Column long timestamp;
@@ -11,6 +20,7 @@ public class User  {
     @Column byte[] profilePicture;
     @Column double rating;
     @Column int count;
+    @Column int logId;
     @Column Log log;
 
     public String getUsername() {
@@ -59,6 +69,14 @@ public class User  {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getLogId() {
+        return logId;
+    }
+
+    public void setLogId(int logId) {
+        this.logId = logId;
     }
 
     public Log getLog() {

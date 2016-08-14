@@ -5,11 +5,11 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
-import com.memtrip.sqlking.preprocessor.processor.column.MembersHaveGetterSettersValidator;
-import com.memtrip.sqlking.preprocessor.processor.generation.FreeMarker;
-import com.memtrip.sqlking.preprocessor.processor.model.Data;
-import com.memtrip.sqlking.preprocessor.processor.templates.DataModel;
-import com.memtrip.sqlking.preprocessor.processor.validation.*;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.data.parse.ParseAnnotations;
+import com.memtrip.sqlking.preprocessor.processor.data.validator.MembersHaveGetterSettersValidator;
+import com.memtrip.sqlking.preprocessor.processor.data.validator.TableNamesMustBeUniqueValidator;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.DataModel;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -43,7 +43,7 @@ public class Processor extends AbstractProcessor {
             final String GENERATED_FILE_PATH = "Q.java";
             final String GENERATED_FILE_NAME = "Q";
 
-            Data data = new Data(elements);
+            Data data = ParseAnnotations.parse(elements);
 
             try {
                 validate(data);
@@ -95,7 +95,7 @@ public class Processor extends AbstractProcessor {
     private Validator[] getValidators(Data data) {
         return new Validator[]{
                 new MembersHaveGetterSettersValidator(data),
-                new TableNamesMustBeUnique(data)
+                new TableNamesMustBeUniqueValidator(data)
         };
     }
 

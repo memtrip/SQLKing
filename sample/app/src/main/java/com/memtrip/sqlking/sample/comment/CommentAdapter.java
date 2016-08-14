@@ -45,13 +45,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.comment_adapter_author)
+        TextView author;
+
         @Bind(R.id.comment_adapter_body)
         TextView body;
 
         @Bind(R.id.comment_adapter_timestamp)
         TextView timestamp;
 
-        private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE d MMM")
+        private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE d MMM HH:mm:ss")
                 .withLocale(Locale.UK);
 
         public CommentViewHolder(View itemView) {
@@ -60,6 +64,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
 
         public void populate(Comment comment) {
+            author.setText(comment.getUser().getUsername());
             body.setText(comment.getBody());
             timestamp.setText(dateTimeFormatter.print(comment.getTimestamp()));
         }

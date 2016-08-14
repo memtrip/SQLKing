@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.preprocessor.processor.generation;
+package com.memtrip.sqlking.preprocessor.processor;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -10,12 +10,12 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-public final class FreeMarker {
+final class FreeMarker {
     private Configuration mConfiguration;
 
     private static final String TEMPLATE_ENCODING = "UTF-8";
 
-    public FreeMarker() throws IOException {
+    FreeMarker() throws IOException {
         mConfiguration = createConfiguration();
     }
 
@@ -27,7 +27,7 @@ public final class FreeMarker {
         return configuration;
     }
 
-    public String getMappedFileBodyFromTemplate(String fileName, Map<String, Object> map) {
+    String getMappedFileBodyFromTemplate(String fileName, Map<String, Object> map) {
         try {
             return createFile(fileName, map);
         } catch (Exception e) {

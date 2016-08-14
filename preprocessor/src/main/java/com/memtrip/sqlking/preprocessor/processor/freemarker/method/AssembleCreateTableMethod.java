@@ -1,7 +1,8 @@
-package com.memtrip.sqlking.preprocessor.processor.templates.method;
+package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
-import com.memtrip.sqlking.preprocessor.processor.column.Column;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.ForeignKey;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
@@ -14,11 +15,11 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
 
     private static final String ASSEMBLE_CREATE_TABLE = "assembleCreateTable";
 
-    public static final String SQL_TEXT = "text";
-    public static final String SQL_INTEGER = "integer";
-    public static final String SQL_LONG = "long";
-    public static final String SQL_REAL = "real";
-    public static final String SQL_BLOB = "blob";
+    private static final String SQL_TEXT = "text";
+    private static final String SQL_INTEGER = "integer";
+    private static final String SQL_LONG = "long";
+    private static final String SQL_REAL = "real";
+    private static final String SQL_BLOB = "blob";
 
     public static Map<String, Object> getMethodMap() {
         Map<String, Object> map = new HashMap<>();
@@ -54,10 +55,13 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
             }
         }
 
-        for (Column column : table.getColumns()) {
-            if (column.hasForeignKey()) {
-                statementBuilder.append("FOREIGN KEY(" + column.getForeignKey().getThisColumn() + ") REFERENCES " + column.getForeignKey().getTable() + "(" + column.getForeignKey().getForeignColumn() + "),");
-            }
+        for (ForeignKey foreignKey : table.getForeignKeys()) {
+            statementBuilder.append("FOREIGN KEY(")
+                    .append(foreignKey.getThisColumn()).append(") REFERENCES ")
+                    .append(foreignKey.getTable())
+                    .append("(")
+                    .append(foreignKey.getForeignColumn())
+                    .append("),");
         }
 
         statementBuilder.deleteCharAt(statementBuilder.length()-1);
@@ -105,7 +109,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
             throw new IllegalStateException("The assembleCreateTable argument must be type of com.memtrip.sqlking.preprocessor.model.Table");
         }
 
-        List<Table> tables = TransformModelUtil.getTables(tablesValue);
+        List<Table> tables = Util.getTables(tablesValue);
 
         return buildCreateTableStatement(table, tables);
     }

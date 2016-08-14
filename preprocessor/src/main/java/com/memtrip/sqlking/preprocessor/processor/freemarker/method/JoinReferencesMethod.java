@@ -1,7 +1,7 @@
-package com.memtrip.sqlking.preprocessor.processor.templates.method;
+package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
-import com.memtrip.sqlking.preprocessor.processor.column.Column;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
@@ -74,7 +74,7 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
                 joinTableNameValue.toString() :
                 String.valueOf(joinTableNameValue);
 
-        List<Table> tables = TransformModelUtil.getTables(tablesValue);
+        List<Table> tables = Util.getTables(tablesValue);
 
         return build(joinTableName, tables);
     }

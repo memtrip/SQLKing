@@ -1,7 +1,4 @@
-package com.memtrip.sqlking.preprocessor.processor.column;
-
-import com.memtrip.sqlking.preprocessor.processor.model.ForeignKey;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+package com.memtrip.sqlking.preprocessor.processor.data;
 
 import java.util.List;
 
@@ -10,53 +7,40 @@ public class Column {
     private String mClassName;
     private String mType;
     private boolean mIsIndex;
-    private ForeignKey mForeignKey;
 
     public String getName() {
         return mName;
+    }
+
+    public void setName(String newVal) {
+        mName = newVal;
     }
 
     public String getClassName() {
         return mClassName;
     }
 
+    public void setClassName(String newVal) {
+        mClassName = newVal;
+    }
+
     public String getType() {
         return mType;
     }
 
+    public void setType(String newVal) {
+        mType = newVal;
+    }
+
     /**
-     * Used in resources/Q.java (freemarker file)
+     * (Used in Q.java freemarker template)
      */
     public boolean isIndex() {
         return mIsIndex;
     }
 
-    public ForeignKey getForeignKey() {
-        return mForeignKey;
-    }
-
-    public boolean hasForeignKey() {
-        return mForeignKey != null;
-    }
-
-    void setName(String newVal) {
-        mName = newVal;
-    }
-
-    void setClassName(String newVal) {
-        mClassName = newVal;
-    }
-
-    void setType(String newVal) {
-        mType = newVal;
-    }
-
-    void setIsIndex(boolean newVal) {
+    public void setIsIndex(boolean newVal) {
         mIsIndex = newVal;
-    }
-
-    void setForeignKey(ForeignKey newVal) {
-        mForeignKey = newVal;
     }
 
     public Table getRootTable(List<Table> tables) {

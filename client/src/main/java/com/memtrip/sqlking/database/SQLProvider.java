@@ -18,6 +18,7 @@ package com.memtrip.sqlking.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.memtrip.sqlking.common.Resolver;
@@ -83,8 +84,7 @@ public class SQLProvider {
 
                 return mDatabase.rawQuery(joinQuery, mClauseHelper.getClauseArgs(clause));
             } catch (Exception e) {
-                System.out.print("");
-                return null;
+                throw new SQLException(e.getMessage());
             }
         } else {
             return mDatabase.query(

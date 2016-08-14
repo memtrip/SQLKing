@@ -1,25 +1,23 @@
-package com.memtrip.sqlking.preprocessor.processor.column;
+package com.memtrip.sqlking.preprocessor.processor.data.parse;
+
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 
-import com.memtrip.sqlking.preprocessor.processor.model.ForeignKey;
+class ParseColumnAnnotation {
 
-public class ParseColumnAnnotation {
-
-    public static Column parseColumn(Element element) {
+    static Column parseColumn(Element element) {
 
         String name = assembleName(element);
         boolean isIndex = assembleIsIndex(element);
-        ForeignKey foreignKey = assembleForeignKey(element);
         String type = assembleType(element);
         String className = assembleClassName(type);
 
         Column column = new Column();
         column.setName(name);
         column.setIsIndex(isIndex);
-        column.setForeignKey(foreignKey);
         column.setType(type);
         column.setClassName(className);
 
@@ -44,10 +42,5 @@ public class ParseColumnAnnotation {
     private static boolean assembleIsIndex(Element element) {
         com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
         return column != null && column.index();
-    }
-
-    private static ForeignKey assembleForeignKey(Element element) {
-        com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
-        return column != null && column.foreign_key().hasForeignKey() ? new ForeignKey(element) : null;
     }
 }

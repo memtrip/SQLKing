@@ -1,11 +1,12 @@
-package com.memtrip.sqlking.preprocessor.processor.column;
+package com.memtrip.sqlking.preprocessor.processor.data.validator;
 
 import com.memtrip.sqlking.preprocessor.processor.Context;
-import com.memtrip.sqlking.preprocessor.processor.model.Data;
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
-import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 import com.memtrip.sqlking.preprocessor.processor.Validator;
 import com.memtrip.sqlking.preprocessor.processor.ValidatorException;
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
+import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
@@ -22,7 +23,7 @@ public class MembersHaveGetterSettersValidator implements Validator {
         mData = data;
     }
 
-    public String getMemberWithoutField(Element element, List<Column> columns) {
+    private String getMemberWithoutField(Element element, List<Column> columns) {
         List<? extends Element> elements = Context.getInstance().getElementUtils().getAllMembers((TypeElement)element);
 
         // Check that getters exist

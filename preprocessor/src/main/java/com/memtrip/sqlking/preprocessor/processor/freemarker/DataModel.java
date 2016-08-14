@@ -1,7 +1,7 @@
-package com.memtrip.sqlking.preprocessor.processor.templates;
+package com.memtrip.sqlking.preprocessor.processor.freemarker;
 
-import com.memtrip.sqlking.preprocessor.processor.model.Data;
-import com.memtrip.sqlking.preprocessor.processor.templates.method.*;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.*;
 
 import java.util.HashMap;
 import java.util.Map;

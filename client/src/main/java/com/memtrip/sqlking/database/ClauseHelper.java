@@ -33,7 +33,6 @@ import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -292,6 +291,16 @@ public class ClauseHelper {
             clauseString = "WHERE " + clauseString;
         }
 
+        String orderByString = getOrderBy(orderBy);
+        if (orderByString != null && orderByString.length() > 0) {
+            orderByString = "ORDER BY " + orderByString;
+        }
+
+        String limitString = getLimit(limit);
+        if (limitString != null && limitString.length() > 0) {
+            limitString = "LIMIT " + limitString;
+        }
+
         stringBuilder.append(" FROM ")
                 .append(tableName)
                 .append(" ")
@@ -299,9 +308,9 @@ public class ClauseHelper {
                 .append(" ")
                 .append(clauseString)
                 .append(" ")
-                .append(getOrderBy(orderBy))
+                .append(orderByString)
                 .append(" ")
-                .append(getLimit(limit));
+                .append(limitString);
 
         return stringBuilder.toString();
     }

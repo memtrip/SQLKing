@@ -1,6 +1,6 @@
-package com.memtrip.sqlking.preprocessor.processor.templates.method;
+package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
-import com.memtrip.sqlking.preprocessor.processor.model.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateModelException;
@@ -8,9 +8,9 @@ import freemarker.template.TemplateModelException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransformModelUtil {
+class Util {
 
-    public static List<Table> getTables(Object simpleSequenceValue) throws TemplateModelException {
+    static List<Table> getTables(Object simpleSequenceValue) throws TemplateModelException {
         List<Table> tables = new ArrayList<>();
 
         if (simpleSequenceValue instanceof SimpleSequence) {

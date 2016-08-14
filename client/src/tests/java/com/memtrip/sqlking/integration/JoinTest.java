@@ -20,9 +20,11 @@ import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.integration.models.Post;
 import com.memtrip.sqlking.integration.models.User;
 import com.memtrip.sqlking.integration.utils.SetupLog;
+import com.memtrip.sqlking.integration.utils.SetupPost;
 import com.memtrip.sqlking.integration.utils.SetupUser;
 import com.memtrip.sqlking.operation.clause.Where;
 import com.memtrip.sqlking.operation.function.Select;
+import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +36,7 @@ import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class InnerJoinTest extends IntegrationTest {
+public class JoinTest extends IntegrationTest {
 
     @Before
     public void setUp() {
@@ -81,6 +83,41 @@ public class InnerJoinTest extends IntegrationTest {
         assertEquals(2, posts.length);
         assertEquals(SetupUser.ANGIE_USER_NAME, posts[0].getUser().getUsername());
         assertEquals(SetupUser.ANGIE_LOG_ID, posts[0].getUser().getLog().getId());
+    }
+
+    @Test
+    public void testJoinWithOrderBy() {
+        Post[] posts = Select .getBuilder()
+                .join(
+                        innerJoin(
+                                User.class,
+                                on("Post.userId", "User.id")
+                        )
+                )
+                .orderBy("Post.id", OrderBy.Order.DESC)
+                .execute(Post.class, getSQLProvider());
+
+        assertEquals(3, posts.length);
+        assertEquals(SetupPost.POST_3_ID, posts[0].getId());
+        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
+        assertEquals(SetupPost.POST_1_ID, posts[2].getId());
+    }
+
+    @Test
+    public void testJoinWithLimit() {
+        Post[] posts = Select .getBuilder()
+                .join(
+                        innerJoin(
+                                User.class,
+                                on("Post.userId", "User.id")
+                        )
+                )
+                .limit(0,2)
+                .execute(Post.class, getSQLProvider());
+
+        assertEquals(2, posts.length);
+        assertEquals(SetupPost.POST_1_ID, posts[0].getId());
+        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
     }
 
     @Test

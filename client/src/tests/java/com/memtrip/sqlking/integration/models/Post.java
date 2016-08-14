@@ -1,9 +1,18 @@
 package com.memtrip.sqlking.integration.models;
 
 import com.memtrip.sqlking.common.Column;
+import com.memtrip.sqlking.common.ForeignKey;
 import com.memtrip.sqlking.common.Table;
 
-@Table
+@Table(
+        foreignKeys = {
+                @ForeignKey(
+                        targetTable = "User",
+                        targetColumn = "id",
+                        localColumn = "userId"
+                )
+        }
+)
 public class Post {
     @Column(index = true) int id;
     @Column String title;

@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.preprocessor.processor.templates.method;
+package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
