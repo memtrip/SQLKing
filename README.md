@@ -8,8 +8,8 @@ annotations and CRUD classes expose an expressive api for executing SQLite queri
 preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.0.6'
-    compile 'com.memtrip.sqlking:client:1.0.6'
+    apt 'com.memtrip.sqlking:preprocessor:1.1'
+    compile 'com.memtrip.sqlking:client:1.1'
 }
 ```
 
@@ -224,6 +224,15 @@ User[] users = Select.getBuilder()
         .limit(2,4)
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
         .execute(User.class, sqlProvider);
+```
+
+####Joins####
+Joins can be performed using the `InnerJoin`, `LeftOutJoin`, `CrossInnerJoin`, `NaturalInnerJoin`, `NaturalLeftOuterJoin` classes
+
+```java
+        Select.getBuilder()
+                .join(innerJoin(User.class, on("Comment.userId","User.id")))
+                .execute(Comment.class, App.getInstance().getSQLProvider());
 ```
 
 ####Tests####
