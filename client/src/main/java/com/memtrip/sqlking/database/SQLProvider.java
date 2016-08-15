@@ -34,9 +34,15 @@ public class SQLProvider {
     private SQLiteDatabase mDatabase;
     private Resolver mResolver;
     private ClauseHelper mClauseHelper;
+    private boolean debugMode;
 
     protected Resolver getResolver() {
         return mResolver;
+    }
+
+    @SuppressWarnings("unused")
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
     }
 
     protected SQLProvider(SQLiteDatabase database, Resolver resolver) {
@@ -82,11 +88,15 @@ public class SQLProvider {
                         mResolver
                 );
 
+                Logger.logQuery(joinQuery, debugMode);
+
                 return mDatabase.rawQuery(joinQuery, mClauseHelper.getClauseArgs(clause));
             } catch (Exception e) {
                 throw new SQLException(e.getMessage());
             }
         } else {
+            // TODO: log this query
+
             return mDatabase.query(
                     tableName,
                     columns,

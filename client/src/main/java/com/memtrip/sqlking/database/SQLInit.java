@@ -21,6 +21,7 @@ import com.memtrip.sqlking.common.Resolver;
 import com.memtrip.sqlking.common.SQLQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,9 +49,7 @@ public class SQLInit {
             tableNameArray[i] = sqlQuery.getTableName();
             createIndexArray[i] = sqlQuery.getCreateIndexQuery();
 
-            for (String indexName : sqlQuery.getIndexNames()) {
-                indexNameArray.add(indexName);
-            }
+            Collections.addAll(indexNameArray, sqlQuery.getIndexNames());
         }
 
         SQLOpen sqlOpen = new SQLOpen(

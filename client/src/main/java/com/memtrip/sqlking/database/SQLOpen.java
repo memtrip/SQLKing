@@ -24,18 +24,18 @@ import java.util.List;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class SQLOpen extends SQLiteOpenHelper {
+class SQLOpen extends SQLiteOpenHelper {
 	private SQLiteDatabase mDatabase;
 	private String[] mSchemaArray;
 	private String[] mTableNameArray;
     private String[] mCreateIndexQuery;
     private List<String> mIndexNames;
 	
-	protected SQLiteDatabase getDatabase() {
+	SQLiteDatabase getDatabase() {
 	    return mDatabase;
 	}
 	
-	protected SQLOpen(String name, int version, String[] schemaArray,
+	SQLOpen(String name, int version, String[] schemaArray,
 					  String[] tableNameArray,
 					  String[] indexQuery,
 					  List<String> indexNames,
