@@ -118,7 +118,8 @@ Select.getBuilder()
     });
 ```
 
-The `execute()` method returns results directly. NOTE: `execute()` must be ran on a separate thread.
+The `execute()` method returns results directly. NOTE: `execute()` will block the ui thread, 
+we recommend you use RxJava.
 
 ```java
 User user = new User();
@@ -227,12 +228,59 @@ User[] users = Select.getBuilder()
 ```
 
 ####Joins####
-Joins can be performed using the `InnerJoin`, `LeftOutJoin`, `CrossInnerJoin`, `NaturalInnerJoin`, `NaturalLeftOuterJoin` classes
+Joins can be performed using the `InnerJoin`, `LeftOutJoin`, `CrossInnerJoin`, `NaturalInnerJoin`, `NaturalLeftOuterJoin` classes.
+The target table for the join must be defined as an @Column, the object will be populated with any join results.
 
 ```java
-        Select.getBuilder()
-                .join(innerJoin(User.class, on("Comment.userId","User.id")))
-                .execute(Comment.class, App.getInstance().getSQLProvider());
+@Table
+public class Comment {
+    @Column(index = true) int id;
+    @Column int userId;
+    @Column User user; // The target table for a potential join
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+}
+
+@Table
+public class User {
+    @Column(index = true) int id;
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+
+Comment[] comments = Select.getBuilder()
+		.join(innerJoin(User.class, on("Comment.userId","User.id")))
+        .execute(Comment.class, App.getInstance().getSQLProvider());
+        
+User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
 
 ####Tests####
