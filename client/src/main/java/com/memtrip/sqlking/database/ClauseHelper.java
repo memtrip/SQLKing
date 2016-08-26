@@ -247,7 +247,9 @@ public class ClauseHelper {
             SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
             String tableName = sqlQuery.getTableName();
 
-            stringBuilder.append(getJoinType(join))
+            stringBuilder
+            		.append(" ")
+            		.append(getJoinType(join))
                     .append(" ")
                     .append(tableName)
                     .append(" ")
