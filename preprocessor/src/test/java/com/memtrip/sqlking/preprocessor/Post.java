@@ -10,6 +10,7 @@ public class Post {
     @Column byte[] blob;
     @Column long timestamp;
     @Column User user;
+    @Column Data data;
 
     public String getId() {
         return id;
@@ -49,5 +50,13 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 }

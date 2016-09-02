@@ -27,20 +27,32 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
     private String build(String joinTableName, List<Table> tables) {
         StringBuilder sb = new StringBuilder();
 
-        for (Table table : tables) {
-            if (table.getName().toLowerCase().equals(joinTableName.toLowerCase())) {
-                List<Column> columns = table.getColumns();
-                for (Column column : columns) {
-                    if (column.isJoinable(tables)) {
-                        Table columnTable = column.getRootTable(tables);
-                        sb.append(buildJoinTable(joinTableName, columnTable));
-                        sb.append(build(column.getClassName(), tables));
-                    }
+        Table joinTable = getTableFromName(joinTableName, tables);
+
+        if (joinTable != null) {
+            List<Column> columns = joinTable.getColumns();
+            for (Column column : columns) {
+                if (column.isJoinable(tables)) {
+                    System.out.println("++ " + column.getName());
+
+                    Table columnTable = column.getRootTable(tables);
+                    sb.append(buildJoinTable(joinTableName, columnTable));
+                    sb.append(build(column.getClassName(), tables));
                 }
             }
         }
 
         return sb.toString();
+    }
+
+    private Table getTableFromName(String tableName, List<Table> tables) {
+        for (Table table : tables) {
+            if (table.getName().toLowerCase().equals(tableName.toLowerCase())) {
+                return table;
+            }
+        }
+
+        return null;
     }
 
     private String buildJoinTable(String joinTableName, Table table) {
@@ -75,7 +87,7 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
                 String.valueOf(joinTableNameValue);
 
         List<Table> tables = Util.getTables(tablesValue);
-
+        
         return build(joinTableName, tables);
     }
 }

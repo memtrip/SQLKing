@@ -167,11 +167,7 @@ public class Q {
                 for (int i = 0; !cursor.isAfterLast(); i++) {
                     ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
 
-                    <#list table.getColumns() as column>
-                        <#if column.isJoinable(tables)>
-                            ${joinReferences(table.getName(),tables)}
-                        </#if>
-                    </#list>
+                    ${joinReferences(table.getName(),tables)}
 
                     for (int x = 0; x < cursor.getColumnCount(); x++) {
                         <#assign retrieveSQLSelectResults>

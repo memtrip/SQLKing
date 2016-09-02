@@ -6,7 +6,7 @@
 
     <groupId>com.memtrip.sqlking</groupId>
     <artifactId>preprocessor</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
 
     <name>SQLKing preprocessor</name>
     <description>

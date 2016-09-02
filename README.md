@@ -288,6 +288,7 @@ The `tests/java/com/memtrip/sqlking` package contains a full set of unit and int
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####
+- Validate that object relationships defined by @Column are annotated with @Table
 - @Table annotatiom should support foreign_key functionality
 - @NotNull annotation and handle this validation in the software layer
 - Composite Foreign Key Constraints
