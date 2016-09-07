@@ -19,5 +19,7 @@ package com.memtrip.sqlking.common;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public @interface Column {
+    boolean primary_key() default false;
+    boolean auto_increment() default false;
     boolean index() default false;
 }

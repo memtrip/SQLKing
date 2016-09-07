@@ -5,7 +5,7 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Post {
-    @Column(index = true) String id;
+    @Column(primary_key = true) String id;
     @Column String title;
     @Column byte[] blob;
     @Column long timestamp;

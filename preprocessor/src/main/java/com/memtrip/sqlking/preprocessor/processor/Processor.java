@@ -8,6 +8,7 @@ import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.parse.ParseAnnotations;
 import com.memtrip.sqlking.preprocessor.processor.data.validator.MembersHaveGetterSettersValidator;
+import com.memtrip.sqlking.preprocessor.processor.data.validator.PrimaryKeyMustBeUnique;
 import com.memtrip.sqlking.preprocessor.processor.data.validator.TableNamesMustBeUniqueValidator;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.DataModel;
 
@@ -95,7 +96,8 @@ public class Processor extends AbstractProcessor {
     private Validator[] getValidators(Data data) {
         return new Validator[]{
                 new MembersHaveGetterSettersValidator(data),
-                new TableNamesMustBeUniqueValidator(data)
+                new TableNamesMustBeUniqueValidator(data),
+                new PrimaryKeyMustBeUnique(data)
         };
     }
 

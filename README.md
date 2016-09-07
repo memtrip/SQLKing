@@ -8,8 +8,8 @@ annotations and CRUD classes expose an expressive api for executing SQLite queri
 preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.1.1'
-    compile 'com.memtrip.sqlking:client:1.1.1'
+    apt 'com.memtrip.sqlking:preprocessor:1.1.5'
+    compile 'com.memtrip.sqlking:client:1.1.5'
 }
 ```
 
@@ -282,6 +282,23 @@ Comment[] comments = Select.getBuilder()
         
 User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
+####Primary Key####
+An auto incrementing primary key can be defined using:
+
+```java
+@Table
+public class Data {
+    @Column(primary_key = true, auto_increment = true) int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+```
 
 ####Tests####
 The `tests/java/com/memtrip/sqlking` package contains a full set of unit and integration tests. The
@@ -289,6 +306,7 @@ tests can be used as a good reference on how to structure queries.
 
 ####TODO####
 - Validate that object relationships defined by @Column are annotated with @Table
-- @Table annotatiom should support foreign_key functionality
+- Validate that auto_increment columns must be int or long
+- @Table annotation should support foreign_key functionality
 - @NotNull annotation and handle this validation in the software layer
 - Composite Foreign Key Constraints

@@ -51,6 +51,13 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
                 statementBuilder.append(" ");
                 statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
 
+                if (column.hasPrimaryKey()) {
+                    statementBuilder.append(" PRIMARY KEY");
+                    if (column.hasAutoIncrement()) {
+                        statementBuilder.append(" AUTOINCREMENT");
+                    }
+                }
+
                 statementBuilder.append(",");
             }
         }
@@ -106,7 +113,8 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
             StringModel stringModel = (StringModel)tableNameValue;
             table = (Table)stringModel.getAdaptedObject(Table.class);
         } else {
-            throw new IllegalStateException("The assembleCreateTable argument must be type of com.memtrip.sqlking.preprocessor.model.Table");
+            throw new IllegalStateException("The assembleCreateTable argument must be type of " +
+                    "com.memtrip.sqlking.preprocessor.processor.data.Table");
         }
 
         List<Table> tables = Util.getTables(tablesValue);

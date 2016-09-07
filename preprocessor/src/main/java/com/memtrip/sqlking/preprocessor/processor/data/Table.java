@@ -67,7 +67,7 @@ public class Table {
      * (Used in Q.java freemarker template)
      * @return  all columns ignoring any object mappings
      */
-    public List<Column> getPrimitiveColumns(List<Table> tables) {
+    public List<Column> getMutableColumns(List<Table> tables) {
         List<Column> withoutObjects = new ArrayList<>();
 
         for (Column column : mColumns) {

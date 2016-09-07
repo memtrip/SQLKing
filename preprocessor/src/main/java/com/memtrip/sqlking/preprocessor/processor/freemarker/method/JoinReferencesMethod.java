@@ -33,8 +33,6 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
             List<Column> columns = joinTable.getColumns();
             for (Column column : columns) {
                 if (column.isJoinable(tables)) {
-                    System.out.println("++ " + column.getName());
-
                     Table columnTable = column.getRootTable(tables);
                     sb.append(buildJoinTable(joinTableName, columnTable));
                     sb.append(build(column.getClassName(), tables));

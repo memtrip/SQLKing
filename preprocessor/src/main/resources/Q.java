@@ -31,12 +31,12 @@ public class Q {
     <#list tables as table>
 
         <#assign getColumnNames>
-            <#list table.getPrimitiveColumns(tables) as column>
+            <#list table.getMutableColumns(tables) as column>
                 "${table.getName()}.${column.getName()}",
             </#list>
         </#assign>
 
-        <#assign unionInsertColumnNames><#list table.getPrimitiveColumns(tables) as column>${column.getName()},</#list></#assign>
+        <#assign unionInsertColumnNames><#list table.getMutableColumns(tables) as column>${column.getName()},</#list></#assign>
 
         <#assign packagedTableName>
             ${table.getPackage()}.${table.getName()}
@@ -61,7 +61,7 @@ public class Q {
             @Override
             public String[] getIndexNames() {
                 return new String[]{
-                <#list table.getPrimitiveColumns(tables) as column>
+                <#list table.getMutableColumns(tables) as column>
                     <#if column.isIndex()>
                         "${table.getName()}_${column.getName()}_index",
                     </#if>
@@ -73,7 +73,7 @@ public class Q {
             public String getCreateIndexQuery() {
                 StringBuilder sb = new StringBuilder();
 
-                <#list table.getPrimitiveColumns(tables) as column>
+                <#list table.getMutableColumns(tables) as column>
                     <#if column.isIndex()>
                         sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getName()} (${column.getName()});");
                     </#if>
@@ -120,23 +120,23 @@ public class Q {
                         sb.append("(${unionInsertColumnNames?remove_ending(",")}) ");
                         sb.append("SELECT ");
 
-                        <#list table.getPrimitiveColumns(tables) as column>
+                        <#list table.getMutableColumns(tables) as column>
                             <#assign getter>
                                 ${table.getName()?lower_case}.get${column.getName()?cap_first}()
                             </#assign>
 
-                            sb.append("${getInsertValue(column.getType(),getter)} AS ${column.getName()}, ");
+                            sb.append("${getInsertValue(column,getter)} AS ${column.getName()}, ");
                         </#list>
 
                         sb.delete(sb.length()-2,sb.length());
                     } else {
                         sb.append(" UNION ALL SELECT ");
 
-                        <#list table.getPrimitiveColumns(tables) as column>
+                        <#list table.getMutableColumns(tables) as column>
                             <#assign getter>
                                 ${table.getName()?lower_case}.get${column.getName()?cap_first}()
                             </#assign>
-                            sb.append("${getInsertValue(column.getType(),getter)}, ");
+                            sb.append("${getInsertValue(column,getter)}, ");
                         </#list>
 
                         sb.delete(sb.length()-2,sb.length());
@@ -205,7 +205,7 @@ public class Q {
 
                 ContentValues contentValues = new ContentValues();
 
-                <#list table.getPrimitiveColumns(tables) as column>
+                <#list table.getMutableColumns(tables) as column>
                     contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.get${column.getName()?cap_first}());
                 </#list>
 

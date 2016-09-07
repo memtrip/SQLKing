@@ -20,6 +20,7 @@ import android.content.Context;
 import com.memtrip.sqlking.database.SQLInit;
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.gen.Q;
+import com.memtrip.sqlking.integration.models.Data;
 import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.integration.models.Post;
 import com.memtrip.sqlking.integration.models.User;
@@ -50,7 +51,8 @@ public class Setup {
                 mContext,
                 User.class,
                 Post.class,
-                Log.class
+                Log.class,
+                Data.class
         );
     }
 }

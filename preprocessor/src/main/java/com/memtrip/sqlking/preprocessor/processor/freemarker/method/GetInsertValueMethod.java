@@ -1,5 +1,8 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
+import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Table;
+import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
@@ -23,35 +26,44 @@ public class GetInsertValueMethod implements TemplateMethodModelEx {
 
     }
 
-    private String assembleInsertValue(String value, String getter) {
-        switch (value) {
-            case "java.lang.String":
-            case "long":
-            case "int":
-            case "double":
-                return "'\" + " + getter + " + \"'";
-            case "boolean":
-                return "\" + (" + getter + " ? \"'1'\" : \"'0'\") + \"";
-            case "byte[]":
-                return "\" + assembleBlob(" + getter + ") + \"";
-            default:
-                return ""; // TODO: foreign key object
+    private String assembleInsertValue(Column column, String getter) {
+        if (column.hasPrimaryKey() && column.hasAutoIncrement()) {
+            return "NULL";
+        } else {
+            switch (column.getType()) {
+                case "java.lang.String":
+                case "long":
+                case "int":
+                case "double":
+                    return "'\" + " + getter + " + \"'";
+                case "boolean":
+                    return "\" + (" + getter + " ? \"'1'\" : \"'0'\") + \"";
+                case "byte[]":
+                    return "\" + assembleBlob(" + getter + ") + \"";
+                default:
+                    return "";
+            }
         }
     }
 
     @Override
     public Object exec(List arguments) throws TemplateModelException {
-        Object value = arguments.get(0);
+        Object columnValue = arguments.get(0);
         Object getter = arguments.get(1);
 
-        String typeValue = value instanceof SimpleScalar ?
-                value.toString() :
-                String.valueOf(value);
+        Column column;
+        if (columnValue instanceof StringModel) {
+            StringModel stringModel = (StringModel)columnValue;
+            column = (Column)stringModel.getAdaptedObject(Column.class);
+        } else {
+            throw new IllegalStateException("The getInsertValue argument must be type of " +
+                    "com.memtrip.sqlking.preprocessor.processor.data.Column");
+        }
 
         String getterValue = getter instanceof SimpleScalar ?
                 getter.toString() :
                 String.valueOf(getter);
 
-        return assembleInsertValue(typeValue, getterValue);
+        return assembleInsertValue(column, getterValue);
     }
 }

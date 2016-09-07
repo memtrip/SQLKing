@@ -18,6 +18,10 @@ public class SetupLog {
                 createLog(
                         LOG_1_ID,
                         LOG_1_TIMESTAMP
+                ),
+                createLog(
+                        1700,
+                        System.currentTimeMillis()
                 )
         };
 

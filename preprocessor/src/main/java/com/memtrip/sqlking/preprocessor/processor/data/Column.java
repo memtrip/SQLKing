@@ -7,6 +7,8 @@ public class Column {
     private String mClassName;
     private String mType;
     private boolean mIsIndex;
+    private boolean mPrimaryKey;
+    private boolean mHasAutoIncrement;
 
     public String getName() {
         return mName;
@@ -41,6 +43,22 @@ public class Column {
 
     public void setIsIndex(boolean newVal) {
         mIsIndex = newVal;
+    }
+
+    public boolean hasPrimaryKey() {
+        return mPrimaryKey;
+    }
+
+    public void setHasPrimaryKey(boolean newVal) {
+        mPrimaryKey = newVal;
+    }
+
+    public boolean hasAutoIncrement() {
+        return mHasAutoIncrement;
+    }
+
+    public void setHasAutoIncrement(boolean newVal) {
+        mHasAutoIncrement = newVal;
     }
 
     public Table getRootTable(List<Table> tables) {

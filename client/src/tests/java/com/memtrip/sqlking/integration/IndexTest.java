@@ -17,7 +17,10 @@ package com.memtrip.sqlking.integration;
 
 import android.database.Cursor;
 
+import com.memtrip.sqlking.integration.models.Data;
+import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.operation.function.Raw;
+import com.memtrip.sqlking.operation.function.Select;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +36,12 @@ public class IndexTest extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
+
+        getSetupData().tearDownTestData(getSQLProvider());
+        getSetupData().setupTestData(getSQLProvider());
+
+        getSetupLog().tearDownTestLogs(getSQLProvider());
+        getSetupLog().setupTestLogs(getSQLProvider());
     }
 
     @Test
@@ -55,6 +64,22 @@ public class IndexTest extends IntegrationTest {
         List<String> indexes = getIndexes(cursor);
 
         assertTrue(indexes.isEmpty());
+    }
+
+    @Test
+    public void testAutoIncrementPrimaryKey() {
+        Data[] data = Select.getBuilder().execute(Data.class, getSQLProvider());
+
+        assertEquals(3, data.length);
+        assertEquals(1, data[0].getId());
+        assertEquals(2, data[1].getId());
+        assertEquals(3, data[2].getId());
+    }
+
+    @Test
+    public void testNoAutoIncrementPrimaryKey() {
+        Log[] log = Select.getBuilder().execute(Log.class, getSQLProvider());
+        assertEquals(3, log.length);
     }
 
     private List<String> getIndexes(Cursor cursor) {
