@@ -19,7 +19,7 @@ ext {
     siteUrl = 'https://github.com/memtrip/SQLKing'
     gitUrl = 'https://github.com/memtrip/SQLKing.git'
 
-    libraryVersion = '1.1'
+    libraryVersion = '1.1.1'
 
     developerId = 'samkirton'
     developerName = 'Samuel Kirton'
@@ -44,7 +44,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 24
         versionCode 7
-        versionName "1.1"
+        versionName "1.1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
