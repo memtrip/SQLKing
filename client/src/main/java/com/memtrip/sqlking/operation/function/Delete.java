@@ -21,7 +21,7 @@ import com.memtrip.sqlking.operation.clause.Clause;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes a Delete query against the SQLite database
@@ -70,14 +70,9 @@ public class Delete extends Query {
                     sqlProvider
             );
         }
-        /**
-         * Executes a Delete query
-         * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
-         * @return An RxJava Observable
-         */
-        public Observable<Integer> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
-            return wrapRx(new Callable<Integer>() {
+
+        public Single<Integer> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+            return wrapSingle(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
                     return execute(classDef, sqlProvider);

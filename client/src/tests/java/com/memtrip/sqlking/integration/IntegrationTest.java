@@ -16,8 +16,9 @@
 package com.memtrip.sqlking.integration;
 
 import android.app.Activity;
-import android.support.test.InstrumentationRegistry;
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.UiThreadTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.integration.utils.Setup;
@@ -27,11 +28,20 @@ import com.memtrip.sqlking.integration.utils.SetupPost;
 import com.memtrip.sqlking.integration.utils.SetupUser;
 
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.runner.RunWith;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<Activity> {
+@RunWith(AndroidJUnit4.class)
+public abstract class IntegrationTest {
+
+    @Rule
+    public UiThreadTestRule startAppRule = new UiThreadTestRule();
+
     private Setup mSetup;
     private SetupUser mSetupUser;
     private SetupPost mSetupPost;
@@ -42,19 +52,19 @@ public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<A
         return mSetup.getSQLProvider();
     }
 
-    protected SetupUser getSetupUser() {
+    SetupUser getSetupUser() {
         return mSetupUser;
     }
 
-    protected SetupPost getSetupPost() {
+    SetupPost getSetupPost() {
         return mSetupPost;
     }
 
-    protected SetupLog getSetupLog() {
+    SetupLog getSetupLog() {
         return mSetupLog;
     }
 
-    public SetupData getSetupData() {
+    SetupData getSetupData() {
         return mSetupData;
     }
 
@@ -69,10 +79,5 @@ public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<A
 
         mSetup = new Setup(getInstrumentation().getTargetContext());
         mSetup.setUp();
-    }
-
-    public IntegrationTest() {
-        super(Activity.class);
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
     }
 }

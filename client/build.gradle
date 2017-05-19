@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.neenbedankt.android-apt'
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -19,7 +18,7 @@ ext {
     siteUrl = 'https://github.com/memtrip/SQLKing'
     gitUrl = 'https://github.com/memtrip/SQLKing.git'
 
-    libraryVersion = '1.1.5'
+    libraryVersion = '1.2'
 
     developerId = 'samkirton'
     developerName = 'Samuel Kirton'
@@ -37,14 +36,14 @@ version = libraryVersion
 group = publishedGroupId
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 7
-        versionName "1.1.1"
+        versionName "1.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -137,18 +136,14 @@ install {
 }
 
 dependencies {
-    compile 'com.memtrip.sqlking:common:1.1.5'
-    compile 'io.reactivex:rxjava:1.1.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.memtrip.sqlking:common:1.2'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.4'
 
-    androidTestApt 'com.memtrip.sqlking:preprocessor:1.1.5'
+    androidTestAnnotationProcessor 'com.memtrip.sqlking:preprocessor:1.2'
 
-    androidTestCompile(
-        'com.android.support.test:runner:0.3',
-        'com.android.support.test:rules:0.3',
-        'com.google.dexmaker:dexmaker-mockito:1.1',
-        'com.google.dexmaker:dexmaker:1.1'
-    )
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
 }
 
 task sourcesJar(type: Jar) {

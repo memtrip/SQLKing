@@ -9,10 +9,15 @@ import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.function.Update;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 
 public abstract class Query {
 
@@ -23,7 +28,7 @@ public abstract class Query {
         }
     }
 
-    protected static Cursor selectCursor(Select select, Class<?> classDef, SQLProvider sqlProvider) {
+    private static Cursor selectCursor(Select select, Class<?> classDef, SQLProvider sqlProvider) {
 
         SQLQuery sqlQuery = getSQLQuery(classDef, sqlProvider);
 
@@ -39,7 +44,7 @@ public abstract class Query {
         );
     }
 
-    protected static <T> T[] select(Select select, Class<?> classDef, SQLProvider sqlProvider) {
+    protected static <T> List<T> select(Select select, Class<?> classDef, SQLProvider sqlProvider) {
         Cursor cursor = selectCursor(select, classDef, sqlProvider);
         return getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
     }
@@ -47,10 +52,10 @@ public abstract class Query {
     protected static <T> T selectSingle(Select select, Class<?> classDef, SQLProvider sqlProvider) {
         Cursor cursor = selectCursor(select, classDef, sqlProvider);
 
-        T[] results = getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
+        List<T> results = getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
 
-        if (results != null && results.length > 0) {
-            return results[0];
+        if (results != null && results.size() > 0) {
+            return results.get(0);
         } else {
             return null;
         }
@@ -82,19 +87,31 @@ public abstract class Query {
         return sqlProvider.rawQuery(query);
     }
 
-    protected static <T> Observable<T> wrapRx(final Callable<T> func) {
-        return Observable.create(
-                new Observable.OnSubscribe<T>() {
-                    @Override
-                    public void call(Subscriber<? super T> subscriber) {
-                        try {
-                            subscriber.onNext(func.call());
-                        } catch (Exception e) {
-                            subscriber.onError(e);
-                        }
-                    }
+    protected static <T> Single<T> wrapSingle(final Callable<T> func) {
+        return Single.create(new SingleOnSubscribe<T>() {
+            @Override
+            public void subscribe(SingleEmitter<T> e) {
+                try {
+                    e.onSuccess(func.call());
+                } catch (Throwable t) {
+                    e.onError(t);
                 }
-        );
+            }
+        });
+    }
+
+    protected static Completable wrapCompletable(final Runnable func) {
+        return Completable.create(new CompletableOnSubscribe() {
+            @Override
+            public void subscribe(CompletableEmitter e)  {
+                try {
+                    func.run();
+                    e.onComplete();
+                } catch (Throwable t) {
+                    e.onError(t);
+                }
+            }
+        });
     }
 
     private static SQLQuery getSQLQuery(Class<?> classDef, SQLProvider sqlProvider) {

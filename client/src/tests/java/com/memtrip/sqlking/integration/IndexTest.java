@@ -28,6 +28,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
@@ -68,18 +71,21 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testAutoIncrementPrimaryKey() {
-        Data[] data = Select.getBuilder().execute(Data.class, getSQLProvider());
+        List<Data> data = Select.getBuilder().execute(Data.class, getSQLProvider());
 
-        assertEquals(3, data.length);
-        assertEquals(1, data[0].getId());
-        assertEquals(2, data[1].getId());
-        assertEquals(3, data[2].getId());
+        assertEquals(3, data.size());
+        assertEquals(1, data.get(0).getId());
+        assertEquals(2, data.get(1).getId());
+        assertEquals(3, data.get(2).getId());
     }
 
     @Test
     public void testNoAutoIncrementPrimaryKey() {
-        Log[] log = Select.getBuilder().execute(Log.class, getSQLProvider());
-        assertEquals(3, log.length);
+        List<Log> log = Select.getBuilder().execute(Log.class, getSQLProvider());
+
+        assertEquals(2, log.size());
+        assertEquals(1, log.get(0).getId());
+        assertEquals(1700, log.get(1).getId());
     }
 
     private List<String> getIndexes(Cursor cursor) {

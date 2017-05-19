@@ -29,9 +29,12 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.memtrip.sqlking.operation.clause.On.on;
 import static com.memtrip.sqlking.operation.clause.Where.where;
 import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -54,19 +57,19 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testInnerJoin() {
-        User[] users = Select .getBuilder()
+        List<User> users = Select .getBuilder()
                 .join(innerJoin(Log.class, on("User.logId", "Log.id")))
                 .execute(User.class, getSQLProvider());
 
 
-        assertEquals(1, users.length);
-        assertEquals(SetupLog.LOG_1_ID, users[0].getLog().getId());
-        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].getLog().getTimestamp());
+        assertEquals(1, users.size());
+        assertEquals(SetupLog.LOG_1_ID, users.get(0).getLog().getId());
+        assertEquals(SetupLog.LOG_1_TIMESTAMP, users.get(0).getLog().getTimestamp());
     }
 
     @Test
     public void testNestedInnerJoin() {
-        Post[] posts = Select .getBuilder()
+        List<Post> posts = Select .getBuilder()
                 .join(
                         innerJoin(
                             User.class,
@@ -80,14 +83,14 @@ public class JoinTest extends IntegrationTest {
                 .execute(Post.class, getSQLProvider());
 
 
-        assertEquals(2, posts.length);
-        assertEquals(SetupUser.ANGIE_USER_NAME, posts[0].getUser().getUsername());
-        assertEquals(SetupUser.ANGIE_LOG_ID, posts[0].getUser().getLog().getId());
+        assertEquals(2, posts.size());
+        assertEquals(SetupUser.ANGIE_USER_NAME, posts.get(0).getUser().getUsername());
+        assertEquals(SetupUser.ANGIE_LOG_ID, posts.get(0).getUser().getLog().getId());
     }
 
     @Test
     public void testJoinWithOrderBy() {
-        Post[] posts = Select .getBuilder()
+        List<Post> posts = Select .getBuilder()
                 .join(
                         innerJoin(
                                 User.class,
@@ -97,15 +100,15 @@ public class JoinTest extends IntegrationTest {
                 .orderBy("Post.id", OrderBy.Order.DESC)
                 .execute(Post.class, getSQLProvider());
 
-        assertEquals(3, posts.length);
-        assertEquals(SetupPost.POST_3_ID, posts[0].getId());
-        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
-        assertEquals(SetupPost.POST_1_ID, posts[2].getId());
+        assertEquals(3, posts.size());
+        assertEquals(SetupPost.POST_3_ID, posts.get(0).getId());
+        assertEquals(SetupPost.POST_2_ID, posts.get(1).getId());
+        assertEquals(SetupPost.POST_1_ID, posts.get(2).getId());
     }
 
     @Test
     public void testJoinWithLimit() {
-        Post[] posts = Select .getBuilder()
+        List<Post> posts = Select .getBuilder()
                 .join(
                         innerJoin(
                                 User.class,
@@ -115,9 +118,9 @@ public class JoinTest extends IntegrationTest {
                 .limit(0,2)
                 .execute(Post.class, getSQLProvider());
 
-        assertEquals(2, posts.length);
-        assertEquals(SetupPost.POST_1_ID, posts[0].getId());
-        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
+        assertEquals(2, posts.size());
+        assertEquals(SetupPost.POST_1_ID, posts.get(0).getId());
+        assertEquals(SetupPost.POST_2_ID, posts.get(1).getId());
     }
 
     @Test
@@ -142,14 +145,14 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithCondition() {
-        User[] users = Select .getBuilder()
+        List<User> users = Select .getBuilder()
                 .join(innerJoin(Log.class, on("User.logId", "Log.id")))
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
                 .execute(User.class, getSQLProvider());
 
 
-        assertEquals(1, users.length);
-        assertEquals(SetupLog.LOG_1_ID, users[0].getLog().getId());
-        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].getLog().getTimestamp());
+        assertEquals(1, users.size());
+        assertEquals(SetupLog.LOG_1_ID, users.get(0).getLog().getId());
+        assertEquals(SetupLog.LOG_1_TIMESTAMP, users.get(0).getLog().getTimestamp());
     }
 }

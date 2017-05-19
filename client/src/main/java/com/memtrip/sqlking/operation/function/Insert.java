@@ -18,9 +18,7 @@ package com.memtrip.sqlking.operation.function;
 import com.memtrip.sqlking.database.Query;
 import com.memtrip.sqlking.database.SQLProvider;
 
-import java.util.concurrent.Callable;
-
-import rx.Observable;
+import io.reactivex.Completable;
 
 /**
  * Executes an Insert query against the SQLite database
@@ -68,17 +66,11 @@ public class Insert extends Query {
             );
         }
 
-        /**
-         * Executes an Insert query
-         * @param sqlProvider Where the magic happens!
-         * @return An RxJava Observable
-         */
-        public Observable<Void> rx(final SQLProvider sqlProvider) {
-            return wrapRx(new Callable<Void>() {
+        public Completable rx(final SQLProvider sqlProvider) {
+            return wrapCompletable(new Runnable() {
                 @Override
-                public Void call() throws Exception {
+                public void run() {
                     execute(sqlProvider);
-                    return null; // Void
                 }
             });
         }

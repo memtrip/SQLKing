@@ -21,7 +21,7 @@ import com.memtrip.sqlking.operation.clause.Clause;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes a Count query against the SQLite database
@@ -71,14 +71,8 @@ public class Count extends Query {
             );
         }
 
-        /**
-         * Execute a Count query
-         * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
-         * @return An RxJava Observable
-         */
-        public Observable<Long> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
-            return wrapRx(new Callable<Long>() {
+        public Single<Long> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+            return wrapSingle(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
                     return execute(classDef, sqlProvider);

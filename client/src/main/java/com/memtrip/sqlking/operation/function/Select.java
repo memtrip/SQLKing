@@ -22,9 +22,10 @@ import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes a Select query against the SQLite database
@@ -115,7 +116,7 @@ public class Select extends Query {
          * @param <T> The model object returned from the query
          * @return The rows returned by the Select query
          */
-        public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
+        public <T> List<T> execute(Class<T> classDef, SQLProvider sqlProvider) {
             return select(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
@@ -138,31 +139,17 @@ public class Select extends Query {
             );
         }
 
-        /**
-         * Executes a Select query
-         * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
-         * @param <T> The model object returned from the query
-         * @return An RxJava Observable
-         */
-        public <T> Observable<T[]> rx(final Class<T> classDef, final SQLProvider sqlProvider) {
-            return wrapRx(new Callable<T[]>() {
+        public <T> Single<List<T>> rx(final Class<T> classDef, final SQLProvider sqlProvider) {
+            return wrapSingle(new Callable<List<T>>() {
                 @Override
-                public T[] call() throws Exception {
+                public List<T> call() throws Exception {
                     return execute(classDef, sqlProvider);
                 }
             });
         }
 
-        /**
-         * Executes a Select query that expects a single result
-         * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
-         * @param <T> The model object returned from the query
-         * @return An RxJava Observable
-         */
-        public <T> Observable<T> rxOne(final Class<T> classDef, final SQLProvider sqlProvider) {
-            return wrapRx(new Callable<T>() {
+        public <T> Single<T> rxSingleItem(final Class<T> classDef, final SQLProvider sqlProvider) {
+            return wrapSingle(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
                     return executeOne(classDef, sqlProvider);

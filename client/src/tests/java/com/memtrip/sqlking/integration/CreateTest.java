@@ -25,7 +25,11 @@ import com.memtrip.sqlking.operation.function.Select;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.memtrip.sqlking.operation.clause.Where.where;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -115,13 +119,13 @@ public class CreateTest  extends IntegrationTest {
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());
         assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
         assertEquals(ANGIE_IS_REGISTERED, angieUser.getIsRegistered());
-        assertEquals(ANGIE_RATING, angieUser.getRating());
+        assertEquals(ANGIE_RATING, angieUser.getRating(), 0.1);
         assertEquals(ANGIE_COUNT, angieUser.getCount());
 
         assertEquals(SAM_USERNAME, samUser.getUsername());
         assertEquals(SAM_TIMESTAMP, samUser.getTimestamp());
         assertEquals(SAM_IS_REGISTERED, samUser.getIsRegistered());
-        assertEquals(SAM_RATING, samUser.getRating());
+        assertEquals(SAM_RATING, samUser.getRating(), 0.1);
         assertEquals(SAM_COUNT, samUser.getCount());
     }
 
@@ -150,12 +154,12 @@ public class CreateTest  extends IntegrationTest {
 
         Insert.getBuilder().values(users).execute(getSQLProvider());
 
-        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
+        List<User> usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
 
-        for (int i = 0; i < usersInserted.length; i++) {
-            assertEquals(ANGIE_TIMESTAMP+i,usersInserted[i].getTimestamp());
+        for (int i = 0; i < usersInserted.size(); i++) {
+            assertEquals(ANGIE_TIMESTAMP+i,usersInserted.get(i).getTimestamp());
         }
 
-        assertEquals(COLUMN_COUNT, usersInserted.length);
+        assertEquals(COLUMN_COUNT, usersInserted.size());
     }
 }

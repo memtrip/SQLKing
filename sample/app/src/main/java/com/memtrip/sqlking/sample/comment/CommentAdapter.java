@@ -12,15 +12,16 @@ import com.memtrip.sqlking.sample.model.Comment;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
-    private Comment[] comments;
+class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+    private List<Comment> comments;
 
-    public void addAll(Comment[] comments) {
+    void addAll(List<Comment> comments) {
         this.comments = comments;
         notifyDataSetChanged();
     }
@@ -35,16 +36,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(CommentAdapter.CommentViewHolder holder, int position) {
-        Comment comment = comments[position];
+        Comment comment = comments.get(position);
         holder.populate(comment);
     }
 
     @Override
     public int getItemCount() {
-        return comments != null ? comments.length : 0;
+        return comments != null ? comments.size() : 0;
     }
 
-    public static class CommentViewHolder extends RecyclerView.ViewHolder {
+    static class CommentViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.comment_adapter_author)
         TextView author;
@@ -58,12 +59,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE d MMM HH:mm:ss")
                 .withLocale(Locale.UK);
 
-        public CommentViewHolder(View itemView) {
+        CommentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void populate(Comment comment) {
+        void populate(Comment comment) {
             author.setText(comment.getUser().getUsername());
             body.setText(comment.getBody());
             timestamp.setText(dateTimeFormatter.print(comment.getTimestamp()));

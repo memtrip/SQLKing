@@ -24,6 +24,7 @@ import com.memtrip.sqlking.operation.function.Count;
 import org.junit.Before;
 
 import static com.memtrip.sqlking.operation.clause.Where.where;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]

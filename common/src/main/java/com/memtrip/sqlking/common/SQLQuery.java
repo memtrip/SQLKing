@@ -18,6 +18,8 @@ package com.memtrip.sqlking.common;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.List;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
@@ -30,5 +32,5 @@ public interface SQLQuery {
     String[] buildUnionInsertQuery(Object[] models);
     String[] getColumnNames();
     ContentValues getContentValues(Object model);
-    <T> T[] retrieveSQLSelectResults(Cursor cursor);
+    <T> List<T> retrieveSQLSelectResults(Cursor cursor);
 }

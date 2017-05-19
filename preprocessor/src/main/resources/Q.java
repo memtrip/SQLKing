@@ -160,8 +160,8 @@ public class Q {
             }
 
             @Override
-            public ${packagedTableName}[] retrieveSQLSelectResults(Cursor cursor) {
-                ${packagedTableName}[] result = new ${packagedTableName}[cursor.getCount()];
+            public List<${packagedTableName}> retrieveSQLSelectResults(Cursor cursor) {
+                List<${packagedTableName}> result = new ArrayList<>();
 
                 cursor.moveToFirst();
                 for (int i = 0; !cursor.isAfterLast(); i++) {
@@ -185,7 +185,7 @@ public class Q {
                         ${retrieveSQLSelectResults?trim?remove_beginning("} else ")}
                     }
 
-                    result[i] = ${table.getName()?lower_case};
+                    result.add(${table.getName()?lower_case});
                     cursor.moveToNext();
                 }
 

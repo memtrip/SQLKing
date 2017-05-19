@@ -8,8 +8,8 @@ annotations and CRUD classes expose an expressive api for executing SQLite queri
 preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.1.5'
-    compile 'com.memtrip.sqlking:client:1.1.5'
+    annotationProcessor 'com.memtrip.sqlking:preprocessor:1.2'
+    compile 'com.memtrip.sqlking:client:1.2'
 }
 ```
 
@@ -110,12 +110,22 @@ Select.getBuilder()
     .rx(User.class, sqlProvider)
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
-    .subscribe(new Action1<User[]>() {
-        @Override
-        public void call(User[] users) {
-            // do something with the users
-        }
-    });
+    .subscribe(new SingleObserver<List<User>>() {
+       @Override
+       public void onSubscribe(Disposable d) {
+
+       }
+
+       @Override
+       public void onSuccess(List<User> users) {
+           // do something with results
+       }
+
+       @Override
+       public void onError(Throwable e) {
+
+       }
+   });
 ```
 
 The `execute()` method returns results directly. NOTE: `execute()` will block the ui thread, 
@@ -128,12 +138,12 @@ user.setIsRegistered(true);
 user.setTimestamp(System.currentTimeMillis());
 
 // INSERT INTO User (username, isRegistered, timestamp) VALUES ('12345678',true,632348968244);
-Insert.getBuilder().values(users).execute(User.class, sqlProvider);
+Insert.getBuilder().values(user).execute(User.class, sqlProvider);
 ```
 
 ```java
 // SELECT * FROM User;
-User[] users = Select.getBuilder().execute(User.class, sqlProvider);
+List<User> users = Select.getBuilder().execute(User.class, sqlProvider);
 ```
 
 ```java
@@ -197,7 +207,7 @@ User[] users = Select.getBuilder()
 
 ```java
 // SELECT * FROM User WHERE ((username = "sam" OR username = "angie") AND (timestamp >= 1234567890));
-User[] users = Select.getBuilder()
+List<User> users = Select.getBuilder()
 		.where(new And(
                 new Or(
                         new Where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "sam"),
@@ -214,14 +224,14 @@ The `OrderBy` and `Limit` classes are used to manipulate the results of the `Sel
 
 ```java
 // SELECT * FROM user ORDER BY username DESC
-User[] users = Select.getBuilder()
+List<User> users = Select.getBuilder()
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
         .execute(User.class, sqlProvider);
 ```
 
 ```java
 // SELECT * FROM user ORDER BY username DESC LIMIT 2,4
-User[] users = Select.getBuilder()
+List<User> users = Select.getBuilder()
         .limit(2,4)
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
         .execute(User.class, sqlProvider);
@@ -276,7 +286,7 @@ public class User {
     }
 }
 
-Comment[] comments = Select.getBuilder()
+List<Comment> comments = Select.getBuilder()
 		.join(innerJoin(User.class, on("Comment.userId","User.id")))
         .execute(Comment.class, App.getInstance().getSQLProvider());
         

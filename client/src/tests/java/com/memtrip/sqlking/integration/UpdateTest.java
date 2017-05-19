@@ -26,7 +26,10 @@ import com.memtrip.sqlking.operation.function.Update;
 
 import org.junit.Before;
 
+import java.util.List;
+
 import static com.memtrip.sqlking.operation.clause.Where.where;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -83,7 +86,7 @@ public class UpdateTest extends IntegrationTest {
                 .execute(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder()
+        List<User> users = Select.getBuilder()
                 .execute(User.class, getSQLProvider());
 
         for (User user : users) {
@@ -92,7 +95,7 @@ public class UpdateTest extends IntegrationTest {
             assertEquals(newUsername, user.getUsername());
         }
 
-        assertEquals(updated, users.length);
+        assertEquals(updated, users.size());
     }
 
     @org.junit.Test
@@ -113,15 +116,15 @@ public class UpdateTest extends IntegrationTest {
                 .execute(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder()
+        List<User> users = Select.getBuilder()
                 .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
                 .execute(User.class, getSQLProvider());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected
         // with a timestamp of "0"
-        assertEquals(3, users.length);
+        assertEquals(3, users.size());
 
-        assertEquals(updated, users.length);
+        assertEquals(updated, users.size());
     }
 }

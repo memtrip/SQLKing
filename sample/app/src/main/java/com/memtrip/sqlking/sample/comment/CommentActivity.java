@@ -18,12 +18,17 @@ import com.memtrip.sqlking.sample.R;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.memtrip.sqlking.operation.clause.On.on;
 import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
@@ -41,6 +46,8 @@ public class CommentActivity extends AppCompatActivity {
 
     private CommentAdapter commentAdapter;
 
+    private CompositeDisposable disposables;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,8 @@ public class CommentActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         commentAdapter = new CommentAdapter();
+
+        disposables = new CompositeDisposable();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(commentAdapter);
@@ -72,19 +81,36 @@ public class CommentActivity extends AppCompatActivity {
         countComments();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        disposables.dispose();
+    }
+
     private void checkUserExists() {
         Count.getBuilder()
                 .rx(User.class, App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
+                .subscribe(new SingleObserver<Long>() {
                     @Override
-                    public void call(Long aLong) {
+                    public void onSubscribe(Disposable d) {
+                        disposables.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Long aLong) {
                         if (aLong == 0) {
                             insertUser();
                         } else {
                             refreshComments();
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
     }
@@ -98,10 +124,20 @@ public class CommentActivity extends AppCompatActivity {
                 .rx(App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void onSubscribe(Disposable d) {
+                        disposables.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
                         refreshComments();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
     }
@@ -111,10 +147,20 @@ public class CommentActivity extends AppCompatActivity {
                 .rx(Comment.class, App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
+                .subscribe(new SingleObserver<Long>() {
                     @Override
-                    public void call(Long aLong) {
+                    public void onSubscribe(Disposable d) {
+                        disposables.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Long aLong) {
                         count.setText(getResources().getString(R.string.count, aLong.toString()));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
     }
@@ -130,10 +176,20 @@ public class CommentActivity extends AppCompatActivity {
                 .rx(App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void onSubscribe(Disposable d) {
+                        disposables.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
                         refreshComments();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
 
@@ -147,10 +203,20 @@ public class CommentActivity extends AppCompatActivity {
                 .rx(Comment.class, App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Comment[]>() {
+                .subscribe(new SingleObserver<List<Comment>>() {
                     @Override
-                    public void call(Comment[] comments) {
+                    public void onSubscribe(Disposable d) {
+                        disposables.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(List<Comment> comments) {
                         commentAdapter.addAll(comments);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
     }

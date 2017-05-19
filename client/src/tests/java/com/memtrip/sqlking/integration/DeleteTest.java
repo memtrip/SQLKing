@@ -24,8 +24,11 @@ import com.memtrip.sqlking.operation.function.Select;
 
 import org.junit.Before;
 
+import java.util.List;
+
 import static com.memtrip.sqlking.operation.clause.In.in;
 import static com.memtrip.sqlking.operation.clause.Where.where;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -44,11 +47,11 @@ public class DeleteTest extends IntegrationTest {
         int deletedRows = Delete.getBuilder().execute(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        List<User> users = Select.getBuilder().execute(User.class, getSQLProvider());
 
         // All of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 0 rows will be selected
-        assertEquals(0, users.length);
+        assertEquals(0, users.size());
         assertEquals(4, deletedRows);
     }
 
@@ -59,11 +62,11 @@ public class DeleteTest extends IntegrationTest {
             .execute(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        List<User> users = Select.getBuilder().execute(User.class, getSQLProvider());
 
         // 1 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 3 rows will be selected
-        assertEquals(3, users.length);
+        assertEquals(3, users.size());
         assertEquals(1, deletedRows);
     }
 
@@ -74,11 +77,11 @@ public class DeleteTest extends IntegrationTest {
             .execute(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        List<User> users = Select.getBuilder().execute(User.class, getSQLProvider());
 
         // 3 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 1 rows will be selected
-        assertEquals(1, users.length);
+        assertEquals(1, users.size());
         assertEquals(3, deletedRows);
     }
 }
