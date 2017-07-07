@@ -1,5 +1,5 @@
 # DEPRECATED
-Use Room by Google or Realm.
+Use Room or Realm.
 - https://developer.android.com/topic/libraries/architecture/room.html
 - https://realm.io/
 
