@@ -1,8 +1,20 @@
-SQLKing
+# Project deprecated
+Use Room by Google or Realm.
+- https://developer.android.com/topic/libraries/architecture/room.html
+- https://realm.io/
+
+
+
+
+
+
+
+~SQLKing~
 ======================
 
-SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
-annotations and CRUD classes expose an expressive api for executing SQLite queries.
+~SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
+annotations and CRUD classes expose an expressive api for executing SQLite queries.~
+
 ## Gradle dependencies
 *NOTE: See https://bitbucket.org/hvisser/android-apt if you are not familiar with using annotation
 preprocessors on Android.*
